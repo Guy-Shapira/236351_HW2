@@ -1,0 +1,40 @@
+syntax = "proto3";
+package protos;
+
+message City{
+    string city_name = 1;
+    int32 city_id = 2;
+    int32 x = 3;
+    int32 y = 4;
+
+}
+
+message Date{
+    int32 day = 1;
+    int32 month = 2;
+    int32 year = 3;
+}
+
+message RideRequest {
+    string first_name = 1;
+    string last_name = 2;
+    int32 phone_number = 3;
+    City start_location = 4;
+    City end_location = 5;
+    Date date = 6;
+    int32 vacancies = 7;
+    int32 pd = 8;
+    int64 id = 9;
+}
+
+message UserRequest {
+    City location = 1;
+    string first_name = 2;
+    string last_name = 3;
+    int64 id = 4;
+}
+
+service TaxiService {
+    rpc User (UserRequest) returns (UserRequest) {};
+    rpc Ride (RideRequest) returns (RideRequest) {};
+}
