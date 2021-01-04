@@ -1,18 +1,18 @@
 package TaxiRide;
-import java.time.format.DateTimeFormatter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.time.*;
+
+import java.time.LocalDate;
+import java.util.Objects;
 
 public class Ride {
-    public String first_name;
-    public String last_name;
-    public Integer phone_number;
-    public City start_location;
-    public City end_location;
-    public LocalDate date;
-    public Integer vacancies;
-    public Integer pd;
+    private String first_name;
+    private String last_name;
+    private Integer phone_number;
+    private City start_location;
+    private City end_location;
+    private LocalDate date;
+    private Integer vacancies;
+    private Integer pd;
+    private Long id;
 
     public Ride(String first_name, String last_name, Integer phone_number, City start_location, City end_location,
                 LocalDate date, Integer vacancies, Integer pd) {
@@ -88,5 +88,49 @@ public class Ride {
 
     public void setPd(Integer pd) {
         this.pd = pd;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Ride ride = (Ride) o;
+        return first_name.equals(ride.first_name) &&
+                last_name.equals(ride.last_name) &&
+                phone_number.equals(ride.phone_number) &&
+                start_location.equals(ride.start_location) &&
+                end_location.equals(ride.end_location) &&
+                date.equals(ride.date) &&
+                vacancies.equals(ride.vacancies) &&
+                pd.equals(ride.pd) &&
+                Objects.equals(id, ride.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(first_name, last_name, phone_number, start_location, end_location, date, vacancies, pd, id);
+    }
+
+    @Override
+    public String toString() {
+        return "Ride{" +
+                "first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", phone_number=" + phone_number +
+                ", start_location=" + start_location +
+                ", end_location=" + end_location +
+                ", date=" + date +
+                ", vacancies=" + vacancies +
+                ", pd=" + pd +
+                ", id=" + id +
+                '}';
     }
 }
