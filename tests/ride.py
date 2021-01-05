@@ -5,7 +5,7 @@ import json
 list_of_cities = ["Tel-Aviv", "Eilat"]
 list_of_coordinates = [2,3,5,10,7,11,23]
 
-for _ in range(2):
+for _ in range(1):
   src_city = {}
   src_city['x'] = np.random.choice(100)
   src_city['y'] = np.random.choice(100)
@@ -29,14 +29,14 @@ for _ in range(2):
   ride['phone_number'] = 3
   ride['first_name'] = 'Shai'
   ride['last_name'] = 'F'
-  ride['vacancies'] = np.random.choice(50)
-  ride['pd'] =  np.random.choice(100)
+  ride['vacancies'] = 2
+  ride['pd'] =  6
 
   
 
   ride_str = json.dumps(ride)
   print(ride_str)  
-  url = "http://localhost:8080/rides"
+  url = "http://localhost:8085/rides"
 
   headers = {
     'Content-Type': 'application/json'

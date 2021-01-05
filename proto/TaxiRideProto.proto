@@ -1,12 +1,12 @@
 syntax = "proto3";
 package protos;
 
+
 message City{
     string city_name = 1;
     int32 city_id = 2;
     int32 x = 3;
     int32 y = 4;
-
 }
 
 message Date{

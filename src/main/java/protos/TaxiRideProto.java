@@ -20,38 +20,33 @@ public final class TaxiRideProto {
 
     /**
      * <code>string city_name = 1;</code>
-     * @return The cityName.
      */
     java.lang.String getCityName();
     /**
      * <code>string city_name = 1;</code>
-     * @return The bytes for cityName.
      */
     com.google.protobuf.ByteString
         getCityNameBytes();
 
     /**
      * <code>int32 city_id = 2;</code>
-     * @return The cityId.
      */
     int getCityId();
 
     /**
      * <code>int32 x = 3;</code>
-     * @return The x.
      */
     int getX();
 
     /**
      * <code>int32 y = 4;</code>
-     * @return The y.
      */
     int getY();
   }
   /**
    * Protobuf type {@code protos.City}
    */
-  public static final class City extends
+  public  static final class City extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:protos.City)
       CityOrBuilder {
@@ -62,13 +57,9 @@ public final class TaxiRideProto {
     }
     private City() {
       cityName_ = "";
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new City();
+      cityId_ = 0;
+      x_ = 0;
+      y_ = 0;
     }
 
     @java.lang.Override
@@ -84,6 +75,7 @@ public final class TaxiRideProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -94,6 +86,13 @@ public final class TaxiRideProto {
             case 0:
               done = true;
               break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
@@ -115,13 +114,6 @@ public final class TaxiRideProto {
               y_ = input.readInt32();
               break;
             }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -139,7 +131,6 @@ public final class TaxiRideProto {
       return protos.TaxiRideProto.internal_static_protos_City_descriptor;
     }
 
-    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protos.TaxiRideProto.internal_static_protos_City_fieldAccessorTable
@@ -151,9 +142,7 @@ public final class TaxiRideProto {
     private volatile java.lang.Object cityName_;
     /**
      * <code>string city_name = 1;</code>
-     * @return The cityName.
      */
-    @java.lang.Override
     public java.lang.String getCityName() {
       java.lang.Object ref = cityName_;
       if (ref instanceof java.lang.String) {
@@ -168,9 +157,7 @@ public final class TaxiRideProto {
     }
     /**
      * <code>string city_name = 1;</code>
-     * @return The bytes for cityName.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getCityNameBytes() {
       java.lang.Object ref = cityName_;
@@ -189,9 +176,7 @@ public final class TaxiRideProto {
     private int cityId_;
     /**
      * <code>int32 city_id = 2;</code>
-     * @return The cityId.
      */
-    @java.lang.Override
     public int getCityId() {
       return cityId_;
     }
@@ -200,9 +185,7 @@ public final class TaxiRideProto {
     private int x_;
     /**
      * <code>int32 x = 3;</code>
-     * @return The x.
      */
-    @java.lang.Override
     public int getX() {
       return x_;
     }
@@ -211,15 +194,12 @@ public final class TaxiRideProto {
     private int y_;
     /**
      * <code>int32 y = 4;</code>
-     * @return The y.
      */
-    @java.lang.Override
     public int getY() {
       return y_;
     }
 
     private byte memoizedIsInitialized = -1;
-    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -229,7 +209,6 @@ public final class TaxiRideProto {
       return true;
     }
 
-    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!getCityNameBytes().isEmpty()) {
@@ -247,7 +226,6 @@ public final class TaxiRideProto {
       unknownFields.writeTo(output);
     }
 
-    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -283,16 +261,17 @@ public final class TaxiRideProto {
       }
       protos.TaxiRideProto.City other = (protos.TaxiRideProto.City) obj;
 
-      if (!getCityName()
-          .equals(other.getCityName())) return false;
-      if (getCityId()
-          != other.getCityId()) return false;
-      if (getX()
-          != other.getX()) return false;
-      if (getY()
-          != other.getY()) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
+      boolean result = true;
+      result = result && getCityName()
+          .equals(other.getCityName());
+      result = result && (getCityId()
+          == other.getCityId());
+      result = result && (getX()
+          == other.getX());
+      result = result && (getY()
+          == other.getY());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
     }
 
     @java.lang.Override
@@ -385,7 +364,6 @@ public final class TaxiRideProto {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -393,7 +371,6 @@ public final class TaxiRideProto {
     public static Builder newBuilder(protos.TaxiRideProto.City prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -417,7 +394,6 @@ public final class TaxiRideProto {
         return protos.TaxiRideProto.internal_static_protos_City_descriptor;
       }
 
-      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protos.TaxiRideProto.internal_static_protos_City_fieldAccessorTable
@@ -440,7 +416,6 @@ public final class TaxiRideProto {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @java.lang.Override
       public Builder clear() {
         super.clear();
         cityName_ = "";
@@ -454,18 +429,15 @@ public final class TaxiRideProto {
         return this;
       }
 
-      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return protos.TaxiRideProto.internal_static_protos_City_descriptor;
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.City getDefaultInstanceForType() {
         return protos.TaxiRideProto.City.getDefaultInstance();
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.City build() {
         protos.TaxiRideProto.City result = buildPartial();
         if (!result.isInitialized()) {
@@ -474,7 +446,6 @@ public final class TaxiRideProto {
         return result;
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.City buildPartial() {
         protos.TaxiRideProto.City result = new protos.TaxiRideProto.City(this);
         result.cityName_ = cityName_;
@@ -485,39 +456,32 @@ public final class TaxiRideProto {
         return result;
       }
 
-      @java.lang.Override
       public Builder clone() {
-        return super.clone();
+        return (Builder) super.clone();
       }
-      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return super.setField(field, value);
+        return (Builder) super.setField(field, value);
       }
-      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
+        return (Builder) super.clearField(field);
       }
-      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
+        return (Builder) super.clearOneof(oneof);
       }
-      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
+        return (Builder) super.setRepeatedField(field, index, value);
       }
-      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return super.addRepeatedField(field, value);
+        return (Builder) super.addRepeatedField(field, value);
       }
-      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protos.TaxiRideProto.City) {
           return mergeFrom((protos.TaxiRideProto.City)other);
@@ -547,12 +511,10 @@ public final class TaxiRideProto {
         return this;
       }
 
-      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -574,7 +536,6 @@ public final class TaxiRideProto {
       private java.lang.Object cityName_ = "";
       /**
        * <code>string city_name = 1;</code>
-       * @return The cityName.
        */
       public java.lang.String getCityName() {
         java.lang.Object ref = cityName_;
@@ -590,7 +551,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string city_name = 1;</code>
-       * @return The bytes for cityName.
        */
       public com.google.protobuf.ByteString
           getCityNameBytes() {
@@ -607,8 +567,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string city_name = 1;</code>
-       * @param value The cityName to set.
-       * @return This builder for chaining.
        */
       public Builder setCityName(
           java.lang.String value) {
@@ -622,7 +580,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string city_name = 1;</code>
-       * @return This builder for chaining.
        */
       public Builder clearCityName() {
         
@@ -632,8 +589,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string city_name = 1;</code>
-       * @param value The bytes for cityName to set.
-       * @return This builder for chaining.
        */
       public Builder setCityNameBytes(
           com.google.protobuf.ByteString value) {
@@ -650,16 +605,12 @@ public final class TaxiRideProto {
       private int cityId_ ;
       /**
        * <code>int32 city_id = 2;</code>
-       * @return The cityId.
        */
-      @java.lang.Override
       public int getCityId() {
         return cityId_;
       }
       /**
        * <code>int32 city_id = 2;</code>
-       * @param value The cityId to set.
-       * @return This builder for chaining.
        */
       public Builder setCityId(int value) {
         
@@ -669,7 +620,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int32 city_id = 2;</code>
-       * @return This builder for chaining.
        */
       public Builder clearCityId() {
         
@@ -681,16 +631,12 @@ public final class TaxiRideProto {
       private int x_ ;
       /**
        * <code>int32 x = 3;</code>
-       * @return The x.
        */
-      @java.lang.Override
       public int getX() {
         return x_;
       }
       /**
        * <code>int32 x = 3;</code>
-       * @param value The x to set.
-       * @return This builder for chaining.
        */
       public Builder setX(int value) {
         
@@ -700,7 +646,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int32 x = 3;</code>
-       * @return This builder for chaining.
        */
       public Builder clearX() {
         
@@ -712,16 +657,12 @@ public final class TaxiRideProto {
       private int y_ ;
       /**
        * <code>int32 y = 4;</code>
-       * @return The y.
        */
-      @java.lang.Override
       public int getY() {
         return y_;
       }
       /**
        * <code>int32 y = 4;</code>
-       * @param value The y to set.
-       * @return This builder for chaining.
        */
       public Builder setY(int value) {
         
@@ -731,7 +672,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int32 y = 4;</code>
-       * @return This builder for chaining.
        */
       public Builder clearY() {
         
@@ -739,13 +679,11 @@ public final class TaxiRideProto {
         onChanged();
         return this;
       }
-      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
-      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -767,7 +705,6 @@ public final class TaxiRideProto {
 
     private static final com.google.protobuf.Parser<City>
         PARSER = new com.google.protobuf.AbstractParser<City>() {
-      @java.lang.Override
       public City parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -785,7 +722,6 @@ public final class TaxiRideProto {
       return PARSER;
     }
 
-    @java.lang.Override
     public protos.TaxiRideProto.City getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -798,26 +734,23 @@ public final class TaxiRideProto {
 
     /**
      * <code>int32 day = 1;</code>
-     * @return The day.
      */
     int getDay();
 
     /**
      * <code>int32 month = 2;</code>
-     * @return The month.
      */
     int getMonth();
 
     /**
      * <code>int32 year = 3;</code>
-     * @return The year.
      */
     int getYear();
   }
   /**
    * Protobuf type {@code protos.Date}
    */
-  public static final class Date extends
+  public  static final class Date extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:protos.Date)
       DateOrBuilder {
@@ -827,13 +760,9 @@ public final class TaxiRideProto {
       super(builder);
     }
     private Date() {
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new Date();
+      day_ = 0;
+      month_ = 0;
+      year_ = 0;
     }
 
     @java.lang.Override
@@ -849,6 +778,7 @@ public final class TaxiRideProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -859,6 +789,13 @@ public final class TaxiRideProto {
             case 0:
               done = true;
               break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
             case 8: {
 
               day_ = input.readInt32();
@@ -872,13 +809,6 @@ public final class TaxiRideProto {
             case 24: {
 
               year_ = input.readInt32();
-              break;
-            }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
               break;
             }
           }
@@ -898,7 +828,6 @@ public final class TaxiRideProto {
       return protos.TaxiRideProto.internal_static_protos_Date_descriptor;
     }
 
-    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protos.TaxiRideProto.internal_static_protos_Date_fieldAccessorTable
@@ -910,9 +839,7 @@ public final class TaxiRideProto {
     private int day_;
     /**
      * <code>int32 day = 1;</code>
-     * @return The day.
      */
-    @java.lang.Override
     public int getDay() {
       return day_;
     }
@@ -921,9 +848,7 @@ public final class TaxiRideProto {
     private int month_;
     /**
      * <code>int32 month = 2;</code>
-     * @return The month.
      */
-    @java.lang.Override
     public int getMonth() {
       return month_;
     }
@@ -932,15 +857,12 @@ public final class TaxiRideProto {
     private int year_;
     /**
      * <code>int32 year = 3;</code>
-     * @return The year.
      */
-    @java.lang.Override
     public int getYear() {
       return year_;
     }
 
     private byte memoizedIsInitialized = -1;
-    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -950,7 +872,6 @@ public final class TaxiRideProto {
       return true;
     }
 
-    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (day_ != 0) {
@@ -965,7 +886,6 @@ public final class TaxiRideProto {
       unknownFields.writeTo(output);
     }
 
-    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -998,14 +918,15 @@ public final class TaxiRideProto {
       }
       protos.TaxiRideProto.Date other = (protos.TaxiRideProto.Date) obj;
 
-      if (getDay()
-          != other.getDay()) return false;
-      if (getMonth()
-          != other.getMonth()) return false;
-      if (getYear()
-          != other.getYear()) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
+      boolean result = true;
+      result = result && (getDay()
+          == other.getDay());
+      result = result && (getMonth()
+          == other.getMonth());
+      result = result && (getYear()
+          == other.getYear());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
     }
 
     @java.lang.Override
@@ -1096,7 +1017,6 @@ public final class TaxiRideProto {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -1104,7 +1024,6 @@ public final class TaxiRideProto {
     public static Builder newBuilder(protos.TaxiRideProto.Date prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -1128,7 +1047,6 @@ public final class TaxiRideProto {
         return protos.TaxiRideProto.internal_static_protos_Date_descriptor;
       }
 
-      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protos.TaxiRideProto.internal_static_protos_Date_fieldAccessorTable
@@ -1151,7 +1069,6 @@ public final class TaxiRideProto {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @java.lang.Override
       public Builder clear() {
         super.clear();
         day_ = 0;
@@ -1163,18 +1080,15 @@ public final class TaxiRideProto {
         return this;
       }
 
-      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return protos.TaxiRideProto.internal_static_protos_Date_descriptor;
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.Date getDefaultInstanceForType() {
         return protos.TaxiRideProto.Date.getDefaultInstance();
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.Date build() {
         protos.TaxiRideProto.Date result = buildPartial();
         if (!result.isInitialized()) {
@@ -1183,7 +1097,6 @@ public final class TaxiRideProto {
         return result;
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.Date buildPartial() {
         protos.TaxiRideProto.Date result = new protos.TaxiRideProto.Date(this);
         result.day_ = day_;
@@ -1193,39 +1106,32 @@ public final class TaxiRideProto {
         return result;
       }
 
-      @java.lang.Override
       public Builder clone() {
-        return super.clone();
+        return (Builder) super.clone();
       }
-      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return super.setField(field, value);
+        return (Builder) super.setField(field, value);
       }
-      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
+        return (Builder) super.clearField(field);
       }
-      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
+        return (Builder) super.clearOneof(oneof);
       }
-      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
+        return (Builder) super.setRepeatedField(field, index, value);
       }
-      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return super.addRepeatedField(field, value);
+        return (Builder) super.addRepeatedField(field, value);
       }
-      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protos.TaxiRideProto.Date) {
           return mergeFrom((protos.TaxiRideProto.Date)other);
@@ -1251,12 +1157,10 @@ public final class TaxiRideProto {
         return this;
       }
 
-      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1278,16 +1182,12 @@ public final class TaxiRideProto {
       private int day_ ;
       /**
        * <code>int32 day = 1;</code>
-       * @return The day.
        */
-      @java.lang.Override
       public int getDay() {
         return day_;
       }
       /**
        * <code>int32 day = 1;</code>
-       * @param value The day to set.
-       * @return This builder for chaining.
        */
       public Builder setDay(int value) {
         
@@ -1297,7 +1197,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int32 day = 1;</code>
-       * @return This builder for chaining.
        */
       public Builder clearDay() {
         
@@ -1309,16 +1208,12 @@ public final class TaxiRideProto {
       private int month_ ;
       /**
        * <code>int32 month = 2;</code>
-       * @return The month.
        */
-      @java.lang.Override
       public int getMonth() {
         return month_;
       }
       /**
        * <code>int32 month = 2;</code>
-       * @param value The month to set.
-       * @return This builder for chaining.
        */
       public Builder setMonth(int value) {
         
@@ -1328,7 +1223,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int32 month = 2;</code>
-       * @return This builder for chaining.
        */
       public Builder clearMonth() {
         
@@ -1340,16 +1234,12 @@ public final class TaxiRideProto {
       private int year_ ;
       /**
        * <code>int32 year = 3;</code>
-       * @return The year.
        */
-      @java.lang.Override
       public int getYear() {
         return year_;
       }
       /**
        * <code>int32 year = 3;</code>
-       * @param value The year to set.
-       * @return This builder for chaining.
        */
       public Builder setYear(int value) {
         
@@ -1359,7 +1249,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int32 year = 3;</code>
-       * @return This builder for chaining.
        */
       public Builder clearYear() {
         
@@ -1367,13 +1256,11 @@ public final class TaxiRideProto {
         onChanged();
         return this;
       }
-      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
-      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -1395,7 +1282,6 @@ public final class TaxiRideProto {
 
     private static final com.google.protobuf.Parser<Date>
         PARSER = new com.google.protobuf.AbstractParser<Date>() {
-      @java.lang.Override
       public Date parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -1413,7 +1299,6 @@ public final class TaxiRideProto {
       return PARSER;
     }
 
-    @java.lang.Override
     public protos.TaxiRideProto.Date getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -1426,42 +1311,35 @@ public final class TaxiRideProto {
 
     /**
      * <code>string first_name = 1;</code>
-     * @return The firstName.
      */
     java.lang.String getFirstName();
     /**
      * <code>string first_name = 1;</code>
-     * @return The bytes for firstName.
      */
     com.google.protobuf.ByteString
         getFirstNameBytes();
 
     /**
      * <code>string last_name = 2;</code>
-     * @return The lastName.
      */
     java.lang.String getLastName();
     /**
      * <code>string last_name = 2;</code>
-     * @return The bytes for lastName.
      */
     com.google.protobuf.ByteString
         getLastNameBytes();
 
     /**
      * <code>int32 phone_number = 3;</code>
-     * @return The phoneNumber.
      */
     int getPhoneNumber();
 
     /**
      * <code>.protos.City start_location = 4;</code>
-     * @return Whether the startLocation field is set.
      */
     boolean hasStartLocation();
     /**
      * <code>.protos.City start_location = 4;</code>
-     * @return The startLocation.
      */
     protos.TaxiRideProto.City getStartLocation();
     /**
@@ -1471,12 +1349,10 @@ public final class TaxiRideProto {
 
     /**
      * <code>.protos.City end_location = 5;</code>
-     * @return Whether the endLocation field is set.
      */
     boolean hasEndLocation();
     /**
      * <code>.protos.City end_location = 5;</code>
-     * @return The endLocation.
      */
     protos.TaxiRideProto.City getEndLocation();
     /**
@@ -1486,12 +1362,10 @@ public final class TaxiRideProto {
 
     /**
      * <code>.protos.Date date = 6;</code>
-     * @return Whether the date field is set.
      */
     boolean hasDate();
     /**
      * <code>.protos.Date date = 6;</code>
-     * @return The date.
      */
     protos.TaxiRideProto.Date getDate();
     /**
@@ -1501,26 +1375,23 @@ public final class TaxiRideProto {
 
     /**
      * <code>int32 vacancies = 7;</code>
-     * @return The vacancies.
      */
     int getVacancies();
 
     /**
      * <code>int32 pd = 8;</code>
-     * @return The pd.
      */
     int getPd();
 
     /**
      * <code>int64 id = 9;</code>
-     * @return The id.
      */
     long getId();
   }
   /**
    * Protobuf type {@code protos.RideRequest}
    */
-  public static final class RideRequest extends
+  public  static final class RideRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:protos.RideRequest)
       RideRequestOrBuilder {
@@ -1532,13 +1403,10 @@ public final class TaxiRideProto {
     private RideRequest() {
       firstName_ = "";
       lastName_ = "";
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new RideRequest();
+      phoneNumber_ = 0;
+      vacancies_ = 0;
+      pd_ = 0;
+      id_ = 0L;
     }
 
     @java.lang.Override
@@ -1554,6 +1422,7 @@ public final class TaxiRideProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -1564,6 +1433,13 @@ public final class TaxiRideProto {
             case 0:
               done = true;
               break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
@@ -1635,13 +1511,6 @@ public final class TaxiRideProto {
               id_ = input.readInt64();
               break;
             }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1659,7 +1528,6 @@ public final class TaxiRideProto {
       return protos.TaxiRideProto.internal_static_protos_RideRequest_descriptor;
     }
 
-    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protos.TaxiRideProto.internal_static_protos_RideRequest_fieldAccessorTable
@@ -1671,9 +1539,7 @@ public final class TaxiRideProto {
     private volatile java.lang.Object firstName_;
     /**
      * <code>string first_name = 1;</code>
-     * @return The firstName.
      */
-    @java.lang.Override
     public java.lang.String getFirstName() {
       java.lang.Object ref = firstName_;
       if (ref instanceof java.lang.String) {
@@ -1688,9 +1554,7 @@ public final class TaxiRideProto {
     }
     /**
      * <code>string first_name = 1;</code>
-     * @return The bytes for firstName.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getFirstNameBytes() {
       java.lang.Object ref = firstName_;
@@ -1709,9 +1573,7 @@ public final class TaxiRideProto {
     private volatile java.lang.Object lastName_;
     /**
      * <code>string last_name = 2;</code>
-     * @return The lastName.
      */
-    @java.lang.Override
     public java.lang.String getLastName() {
       java.lang.Object ref = lastName_;
       if (ref instanceof java.lang.String) {
@@ -1726,9 +1588,7 @@ public final class TaxiRideProto {
     }
     /**
      * <code>string last_name = 2;</code>
-     * @return The bytes for lastName.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getLastNameBytes() {
       java.lang.Object ref = lastName_;
@@ -1747,9 +1607,7 @@ public final class TaxiRideProto {
     private int phoneNumber_;
     /**
      * <code>int32 phone_number = 3;</code>
-     * @return The phoneNumber.
      */
-    @java.lang.Override
     public int getPhoneNumber() {
       return phoneNumber_;
     }
@@ -1758,24 +1616,19 @@ public final class TaxiRideProto {
     private protos.TaxiRideProto.City startLocation_;
     /**
      * <code>.protos.City start_location = 4;</code>
-     * @return Whether the startLocation field is set.
      */
-    @java.lang.Override
     public boolean hasStartLocation() {
       return startLocation_ != null;
     }
     /**
      * <code>.protos.City start_location = 4;</code>
-     * @return The startLocation.
      */
-    @java.lang.Override
     public protos.TaxiRideProto.City getStartLocation() {
       return startLocation_ == null ? protos.TaxiRideProto.City.getDefaultInstance() : startLocation_;
     }
     /**
      * <code>.protos.City start_location = 4;</code>
      */
-    @java.lang.Override
     public protos.TaxiRideProto.CityOrBuilder getStartLocationOrBuilder() {
       return getStartLocation();
     }
@@ -1784,24 +1637,19 @@ public final class TaxiRideProto {
     private protos.TaxiRideProto.City endLocation_;
     /**
      * <code>.protos.City end_location = 5;</code>
-     * @return Whether the endLocation field is set.
      */
-    @java.lang.Override
     public boolean hasEndLocation() {
       return endLocation_ != null;
     }
     /**
      * <code>.protos.City end_location = 5;</code>
-     * @return The endLocation.
      */
-    @java.lang.Override
     public protos.TaxiRideProto.City getEndLocation() {
       return endLocation_ == null ? protos.TaxiRideProto.City.getDefaultInstance() : endLocation_;
     }
     /**
      * <code>.protos.City end_location = 5;</code>
      */
-    @java.lang.Override
     public protos.TaxiRideProto.CityOrBuilder getEndLocationOrBuilder() {
       return getEndLocation();
     }
@@ -1810,24 +1658,19 @@ public final class TaxiRideProto {
     private protos.TaxiRideProto.Date date_;
     /**
      * <code>.protos.Date date = 6;</code>
-     * @return Whether the date field is set.
      */
-    @java.lang.Override
     public boolean hasDate() {
       return date_ != null;
     }
     /**
      * <code>.protos.Date date = 6;</code>
-     * @return The date.
      */
-    @java.lang.Override
     public protos.TaxiRideProto.Date getDate() {
       return date_ == null ? protos.TaxiRideProto.Date.getDefaultInstance() : date_;
     }
     /**
      * <code>.protos.Date date = 6;</code>
      */
-    @java.lang.Override
     public protos.TaxiRideProto.DateOrBuilder getDateOrBuilder() {
       return getDate();
     }
@@ -1836,9 +1679,7 @@ public final class TaxiRideProto {
     private int vacancies_;
     /**
      * <code>int32 vacancies = 7;</code>
-     * @return The vacancies.
      */
-    @java.lang.Override
     public int getVacancies() {
       return vacancies_;
     }
@@ -1847,9 +1688,7 @@ public final class TaxiRideProto {
     private int pd_;
     /**
      * <code>int32 pd = 8;</code>
-     * @return The pd.
      */
-    @java.lang.Override
     public int getPd() {
       return pd_;
     }
@@ -1858,15 +1697,12 @@ public final class TaxiRideProto {
     private long id_;
     /**
      * <code>int64 id = 9;</code>
-     * @return The id.
      */
-    @java.lang.Override
     public long getId() {
       return id_;
     }
 
     private byte memoizedIsInitialized = -1;
-    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -1876,7 +1712,6 @@ public final class TaxiRideProto {
       return true;
     }
 
-    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (!getFirstNameBytes().isEmpty()) {
@@ -1909,7 +1744,6 @@ public final class TaxiRideProto {
       unknownFields.writeTo(output);
     }
 
-    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -1964,35 +1798,36 @@ public final class TaxiRideProto {
       }
       protos.TaxiRideProto.RideRequest other = (protos.TaxiRideProto.RideRequest) obj;
 
-      if (!getFirstName()
-          .equals(other.getFirstName())) return false;
-      if (!getLastName()
-          .equals(other.getLastName())) return false;
-      if (getPhoneNumber()
-          != other.getPhoneNumber()) return false;
-      if (hasStartLocation() != other.hasStartLocation()) return false;
+      boolean result = true;
+      result = result && getFirstName()
+          .equals(other.getFirstName());
+      result = result && getLastName()
+          .equals(other.getLastName());
+      result = result && (getPhoneNumber()
+          == other.getPhoneNumber());
+      result = result && (hasStartLocation() == other.hasStartLocation());
       if (hasStartLocation()) {
-        if (!getStartLocation()
-            .equals(other.getStartLocation())) return false;
+        result = result && getStartLocation()
+            .equals(other.getStartLocation());
       }
-      if (hasEndLocation() != other.hasEndLocation()) return false;
+      result = result && (hasEndLocation() == other.hasEndLocation());
       if (hasEndLocation()) {
-        if (!getEndLocation()
-            .equals(other.getEndLocation())) return false;
+        result = result && getEndLocation()
+            .equals(other.getEndLocation());
       }
-      if (hasDate() != other.hasDate()) return false;
+      result = result && (hasDate() == other.hasDate());
       if (hasDate()) {
-        if (!getDate()
-            .equals(other.getDate())) return false;
+        result = result && getDate()
+            .equals(other.getDate());
       }
-      if (getVacancies()
-          != other.getVacancies()) return false;
-      if (getPd()
-          != other.getPd()) return false;
-      if (getId()
-          != other.getId()) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
+      result = result && (getVacancies()
+          == other.getVacancies());
+      result = result && (getPd()
+          == other.getPd());
+      result = result && (getId()
+          == other.getId());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
     }
 
     @java.lang.Override
@@ -2102,7 +1937,6 @@ public final class TaxiRideProto {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -2110,7 +1944,6 @@ public final class TaxiRideProto {
     public static Builder newBuilder(protos.TaxiRideProto.RideRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -2134,7 +1967,6 @@ public final class TaxiRideProto {
         return protos.TaxiRideProto.internal_static_protos_RideRequest_descriptor;
       }
 
-      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protos.TaxiRideProto.internal_static_protos_RideRequest_fieldAccessorTable
@@ -2157,7 +1989,6 @@ public final class TaxiRideProto {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @java.lang.Override
       public Builder clear() {
         super.clear();
         firstName_ = "";
@@ -2193,18 +2024,15 @@ public final class TaxiRideProto {
         return this;
       }
 
-      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return protos.TaxiRideProto.internal_static_protos_RideRequest_descriptor;
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.RideRequest getDefaultInstanceForType() {
         return protos.TaxiRideProto.RideRequest.getDefaultInstance();
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.RideRequest build() {
         protos.TaxiRideProto.RideRequest result = buildPartial();
         if (!result.isInitialized()) {
@@ -2213,7 +2041,6 @@ public final class TaxiRideProto {
         return result;
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.RideRequest buildPartial() {
         protos.TaxiRideProto.RideRequest result = new protos.TaxiRideProto.RideRequest(this);
         result.firstName_ = firstName_;
@@ -2241,39 +2068,32 @@ public final class TaxiRideProto {
         return result;
       }
 
-      @java.lang.Override
       public Builder clone() {
-        return super.clone();
+        return (Builder) super.clone();
       }
-      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return super.setField(field, value);
+        return (Builder) super.setField(field, value);
       }
-      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
+        return (Builder) super.clearField(field);
       }
-      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
+        return (Builder) super.clearOneof(oneof);
       }
-      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
+        return (Builder) super.setRepeatedField(field, index, value);
       }
-      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return super.addRepeatedField(field, value);
+        return (Builder) super.addRepeatedField(field, value);
       }
-      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protos.TaxiRideProto.RideRequest) {
           return mergeFrom((protos.TaxiRideProto.RideRequest)other);
@@ -2319,12 +2139,10 @@ public final class TaxiRideProto {
         return this;
       }
 
-      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -2346,7 +2164,6 @@ public final class TaxiRideProto {
       private java.lang.Object firstName_ = "";
       /**
        * <code>string first_name = 1;</code>
-       * @return The firstName.
        */
       public java.lang.String getFirstName() {
         java.lang.Object ref = firstName_;
@@ -2362,7 +2179,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string first_name = 1;</code>
-       * @return The bytes for firstName.
        */
       public com.google.protobuf.ByteString
           getFirstNameBytes() {
@@ -2379,8 +2195,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string first_name = 1;</code>
-       * @param value The firstName to set.
-       * @return This builder for chaining.
        */
       public Builder setFirstName(
           java.lang.String value) {
@@ -2394,7 +2208,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string first_name = 1;</code>
-       * @return This builder for chaining.
        */
       public Builder clearFirstName() {
         
@@ -2404,8 +2217,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string first_name = 1;</code>
-       * @param value The bytes for firstName to set.
-       * @return This builder for chaining.
        */
       public Builder setFirstNameBytes(
           com.google.protobuf.ByteString value) {
@@ -2422,7 +2233,6 @@ public final class TaxiRideProto {
       private java.lang.Object lastName_ = "";
       /**
        * <code>string last_name = 2;</code>
-       * @return The lastName.
        */
       public java.lang.String getLastName() {
         java.lang.Object ref = lastName_;
@@ -2438,7 +2248,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string last_name = 2;</code>
-       * @return The bytes for lastName.
        */
       public com.google.protobuf.ByteString
           getLastNameBytes() {
@@ -2455,8 +2264,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string last_name = 2;</code>
-       * @param value The lastName to set.
-       * @return This builder for chaining.
        */
       public Builder setLastName(
           java.lang.String value) {
@@ -2470,7 +2277,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string last_name = 2;</code>
-       * @return This builder for chaining.
        */
       public Builder clearLastName() {
         
@@ -2480,8 +2286,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string last_name = 2;</code>
-       * @param value The bytes for lastName to set.
-       * @return This builder for chaining.
        */
       public Builder setLastNameBytes(
           com.google.protobuf.ByteString value) {
@@ -2498,16 +2302,12 @@ public final class TaxiRideProto {
       private int phoneNumber_ ;
       /**
        * <code>int32 phone_number = 3;</code>
-       * @return The phoneNumber.
        */
-      @java.lang.Override
       public int getPhoneNumber() {
         return phoneNumber_;
       }
       /**
        * <code>int32 phone_number = 3;</code>
-       * @param value The phoneNumber to set.
-       * @return This builder for chaining.
        */
       public Builder setPhoneNumber(int value) {
         
@@ -2517,7 +2317,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int32 phone_number = 3;</code>
-       * @return This builder for chaining.
        */
       public Builder clearPhoneNumber() {
         
@@ -2526,19 +2325,17 @@ public final class TaxiRideProto {
         return this;
       }
 
-      private protos.TaxiRideProto.City startLocation_;
+      private protos.TaxiRideProto.City startLocation_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
           protos.TaxiRideProto.City, protos.TaxiRideProto.City.Builder, protos.TaxiRideProto.CityOrBuilder> startLocationBuilder_;
       /**
        * <code>.protos.City start_location = 4;</code>
-       * @return Whether the startLocation field is set.
        */
       public boolean hasStartLocation() {
         return startLocationBuilder_ != null || startLocation_ != null;
       }
       /**
        * <code>.protos.City start_location = 4;</code>
-       * @return The startLocation.
        */
       public protos.TaxiRideProto.City getStartLocation() {
         if (startLocationBuilder_ == null) {
@@ -2645,19 +2442,17 @@ public final class TaxiRideProto {
         return startLocationBuilder_;
       }
 
-      private protos.TaxiRideProto.City endLocation_;
+      private protos.TaxiRideProto.City endLocation_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
           protos.TaxiRideProto.City, protos.TaxiRideProto.City.Builder, protos.TaxiRideProto.CityOrBuilder> endLocationBuilder_;
       /**
        * <code>.protos.City end_location = 5;</code>
-       * @return Whether the endLocation field is set.
        */
       public boolean hasEndLocation() {
         return endLocationBuilder_ != null || endLocation_ != null;
       }
       /**
        * <code>.protos.City end_location = 5;</code>
-       * @return The endLocation.
        */
       public protos.TaxiRideProto.City getEndLocation() {
         if (endLocationBuilder_ == null) {
@@ -2764,19 +2559,17 @@ public final class TaxiRideProto {
         return endLocationBuilder_;
       }
 
-      private protos.TaxiRideProto.Date date_;
+      private protos.TaxiRideProto.Date date_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
           protos.TaxiRideProto.Date, protos.TaxiRideProto.Date.Builder, protos.TaxiRideProto.DateOrBuilder> dateBuilder_;
       /**
        * <code>.protos.Date date = 6;</code>
-       * @return Whether the date field is set.
        */
       public boolean hasDate() {
         return dateBuilder_ != null || date_ != null;
       }
       /**
        * <code>.protos.Date date = 6;</code>
-       * @return The date.
        */
       public protos.TaxiRideProto.Date getDate() {
         if (dateBuilder_ == null) {
@@ -2886,16 +2679,12 @@ public final class TaxiRideProto {
       private int vacancies_ ;
       /**
        * <code>int32 vacancies = 7;</code>
-       * @return The vacancies.
        */
-      @java.lang.Override
       public int getVacancies() {
         return vacancies_;
       }
       /**
        * <code>int32 vacancies = 7;</code>
-       * @param value The vacancies to set.
-       * @return This builder for chaining.
        */
       public Builder setVacancies(int value) {
         
@@ -2905,7 +2694,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int32 vacancies = 7;</code>
-       * @return This builder for chaining.
        */
       public Builder clearVacancies() {
         
@@ -2917,16 +2705,12 @@ public final class TaxiRideProto {
       private int pd_ ;
       /**
        * <code>int32 pd = 8;</code>
-       * @return The pd.
        */
-      @java.lang.Override
       public int getPd() {
         return pd_;
       }
       /**
        * <code>int32 pd = 8;</code>
-       * @param value The pd to set.
-       * @return This builder for chaining.
        */
       public Builder setPd(int value) {
         
@@ -2936,7 +2720,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int32 pd = 8;</code>
-       * @return This builder for chaining.
        */
       public Builder clearPd() {
         
@@ -2948,16 +2731,12 @@ public final class TaxiRideProto {
       private long id_ ;
       /**
        * <code>int64 id = 9;</code>
-       * @return The id.
        */
-      @java.lang.Override
       public long getId() {
         return id_;
       }
       /**
        * <code>int64 id = 9;</code>
-       * @param value The id to set.
-       * @return This builder for chaining.
        */
       public Builder setId(long value) {
         
@@ -2967,7 +2746,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int64 id = 9;</code>
-       * @return This builder for chaining.
        */
       public Builder clearId() {
         
@@ -2975,13 +2753,11 @@ public final class TaxiRideProto {
         onChanged();
         return this;
       }
-      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
-      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -3003,7 +2779,6 @@ public final class TaxiRideProto {
 
     private static final com.google.protobuf.Parser<RideRequest>
         PARSER = new com.google.protobuf.AbstractParser<RideRequest>() {
-      @java.lang.Override
       public RideRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3021,7 +2796,6 @@ public final class TaxiRideProto {
       return PARSER;
     }
 
-    @java.lang.Override
     public protos.TaxiRideProto.RideRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -3034,12 +2808,10 @@ public final class TaxiRideProto {
 
     /**
      * <code>.protos.City location = 1;</code>
-     * @return Whether the location field is set.
      */
     boolean hasLocation();
     /**
      * <code>.protos.City location = 1;</code>
-     * @return The location.
      */
     protos.TaxiRideProto.City getLocation();
     /**
@@ -3049,38 +2821,33 @@ public final class TaxiRideProto {
 
     /**
      * <code>string first_name = 2;</code>
-     * @return The firstName.
      */
     java.lang.String getFirstName();
     /**
      * <code>string first_name = 2;</code>
-     * @return The bytes for firstName.
      */
     com.google.protobuf.ByteString
         getFirstNameBytes();
 
     /**
      * <code>string last_name = 3;</code>
-     * @return The lastName.
      */
     java.lang.String getLastName();
     /**
      * <code>string last_name = 3;</code>
-     * @return The bytes for lastName.
      */
     com.google.protobuf.ByteString
         getLastNameBytes();
 
     /**
      * <code>int64 id = 4;</code>
-     * @return The id.
      */
     long getId();
   }
   /**
    * Protobuf type {@code protos.UserRequest}
    */
-  public static final class UserRequest extends
+  public  static final class UserRequest extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:protos.UserRequest)
       UserRequestOrBuilder {
@@ -3092,13 +2859,7 @@ public final class TaxiRideProto {
     private UserRequest() {
       firstName_ = "";
       lastName_ = "";
-    }
-
-    @java.lang.Override
-    @SuppressWarnings({"unused"})
-    protected java.lang.Object newInstance(
-        UnusedPrivateParameter unused) {
-      return new UserRequest();
+      id_ = 0L;
     }
 
     @java.lang.Override
@@ -3114,6 +2875,7 @@ public final class TaxiRideProto {
       if (extensionRegistry == null) {
         throw new java.lang.NullPointerException();
       }
+      int mutable_bitField0_ = 0;
       com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder();
       try {
@@ -3124,6 +2886,13 @@ public final class TaxiRideProto {
             case 0:
               done = true;
               break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
             case 10: {
               protos.TaxiRideProto.City.Builder subBuilder = null;
               if (location_ != null) {
@@ -3154,13 +2923,6 @@ public final class TaxiRideProto {
               id_ = input.readInt64();
               break;
             }
-            default: {
-              if (!parseUnknownField(
-                  input, unknownFields, extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -3178,7 +2940,6 @@ public final class TaxiRideProto {
       return protos.TaxiRideProto.internal_static_protos_UserRequest_descriptor;
     }
 
-    @java.lang.Override
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return protos.TaxiRideProto.internal_static_protos_UserRequest_fieldAccessorTable
@@ -3190,24 +2951,19 @@ public final class TaxiRideProto {
     private protos.TaxiRideProto.City location_;
     /**
      * <code>.protos.City location = 1;</code>
-     * @return Whether the location field is set.
      */
-    @java.lang.Override
     public boolean hasLocation() {
       return location_ != null;
     }
     /**
      * <code>.protos.City location = 1;</code>
-     * @return The location.
      */
-    @java.lang.Override
     public protos.TaxiRideProto.City getLocation() {
       return location_ == null ? protos.TaxiRideProto.City.getDefaultInstance() : location_;
     }
     /**
      * <code>.protos.City location = 1;</code>
      */
-    @java.lang.Override
     public protos.TaxiRideProto.CityOrBuilder getLocationOrBuilder() {
       return getLocation();
     }
@@ -3216,9 +2972,7 @@ public final class TaxiRideProto {
     private volatile java.lang.Object firstName_;
     /**
      * <code>string first_name = 2;</code>
-     * @return The firstName.
      */
-    @java.lang.Override
     public java.lang.String getFirstName() {
       java.lang.Object ref = firstName_;
       if (ref instanceof java.lang.String) {
@@ -3233,9 +2987,7 @@ public final class TaxiRideProto {
     }
     /**
      * <code>string first_name = 2;</code>
-     * @return The bytes for firstName.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getFirstNameBytes() {
       java.lang.Object ref = firstName_;
@@ -3254,9 +3006,7 @@ public final class TaxiRideProto {
     private volatile java.lang.Object lastName_;
     /**
      * <code>string last_name = 3;</code>
-     * @return The lastName.
      */
-    @java.lang.Override
     public java.lang.String getLastName() {
       java.lang.Object ref = lastName_;
       if (ref instanceof java.lang.String) {
@@ -3271,9 +3021,7 @@ public final class TaxiRideProto {
     }
     /**
      * <code>string last_name = 3;</code>
-     * @return The bytes for lastName.
      */
-    @java.lang.Override
     public com.google.protobuf.ByteString
         getLastNameBytes() {
       java.lang.Object ref = lastName_;
@@ -3292,15 +3040,12 @@ public final class TaxiRideProto {
     private long id_;
     /**
      * <code>int64 id = 4;</code>
-     * @return The id.
      */
-    @java.lang.Override
     public long getId() {
       return id_;
     }
 
     private byte memoizedIsInitialized = -1;
-    @java.lang.Override
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized == 1) return true;
@@ -3310,7 +3055,6 @@ public final class TaxiRideProto {
       return true;
     }
 
-    @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (location_ != null) {
@@ -3328,7 +3072,6 @@ public final class TaxiRideProto {
       unknownFields.writeTo(output);
     }
 
-    @java.lang.Override
     public int getSerializedSize() {
       int size = memoizedSize;
       if (size != -1) return size;
@@ -3363,19 +3106,20 @@ public final class TaxiRideProto {
       }
       protos.TaxiRideProto.UserRequest other = (protos.TaxiRideProto.UserRequest) obj;
 
-      if (hasLocation() != other.hasLocation()) return false;
+      boolean result = true;
+      result = result && (hasLocation() == other.hasLocation());
       if (hasLocation()) {
-        if (!getLocation()
-            .equals(other.getLocation())) return false;
+        result = result && getLocation()
+            .equals(other.getLocation());
       }
-      if (!getFirstName()
-          .equals(other.getFirstName())) return false;
-      if (!getLastName()
-          .equals(other.getLastName())) return false;
-      if (getId()
-          != other.getId()) return false;
-      if (!unknownFields.equals(other.unknownFields)) return false;
-      return true;
+      result = result && getFirstName()
+          .equals(other.getFirstName());
+      result = result && getLastName()
+          .equals(other.getLastName());
+      result = result && (getId()
+          == other.getId());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
     }
 
     @java.lang.Override
@@ -3471,7 +3215,6 @@ public final class TaxiRideProto {
           .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
-    @java.lang.Override
     public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
       return DEFAULT_INSTANCE.toBuilder();
@@ -3479,7 +3222,6 @@ public final class TaxiRideProto {
     public static Builder newBuilder(protos.TaxiRideProto.UserRequest prototype) {
       return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
     }
-    @java.lang.Override
     public Builder toBuilder() {
       return this == DEFAULT_INSTANCE
           ? new Builder() : new Builder().mergeFrom(this);
@@ -3503,7 +3245,6 @@ public final class TaxiRideProto {
         return protos.TaxiRideProto.internal_static_protos_UserRequest_descriptor;
       }
 
-      @java.lang.Override
       protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
           internalGetFieldAccessorTable() {
         return protos.TaxiRideProto.internal_static_protos_UserRequest_fieldAccessorTable
@@ -3526,7 +3267,6 @@ public final class TaxiRideProto {
                 .alwaysUseFieldBuilders) {
         }
       }
-      @java.lang.Override
       public Builder clear() {
         super.clear();
         if (locationBuilder_ == null) {
@@ -3544,18 +3284,15 @@ public final class TaxiRideProto {
         return this;
       }
 
-      @java.lang.Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return protos.TaxiRideProto.internal_static_protos_UserRequest_descriptor;
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.UserRequest getDefaultInstanceForType() {
         return protos.TaxiRideProto.UserRequest.getDefaultInstance();
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.UserRequest build() {
         protos.TaxiRideProto.UserRequest result = buildPartial();
         if (!result.isInitialized()) {
@@ -3564,7 +3301,6 @@ public final class TaxiRideProto {
         return result;
       }
 
-      @java.lang.Override
       public protos.TaxiRideProto.UserRequest buildPartial() {
         protos.TaxiRideProto.UserRequest result = new protos.TaxiRideProto.UserRequest(this);
         if (locationBuilder_ == null) {
@@ -3579,39 +3315,32 @@ public final class TaxiRideProto {
         return result;
       }
 
-      @java.lang.Override
       public Builder clone() {
-        return super.clone();
+        return (Builder) super.clone();
       }
-      @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return super.setField(field, value);
+        return (Builder) super.setField(field, value);
       }
-      @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return super.clearField(field);
+        return (Builder) super.clearField(field);
       }
-      @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return super.clearOneof(oneof);
+        return (Builder) super.clearOneof(oneof);
       }
-      @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return super.setRepeatedField(field, index, value);
+        return (Builder) super.setRepeatedField(field, index, value);
       }
-      @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return super.addRepeatedField(field, value);
+        return (Builder) super.addRepeatedField(field, value);
       }
-      @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof protos.TaxiRideProto.UserRequest) {
           return mergeFrom((protos.TaxiRideProto.UserRequest)other);
@@ -3642,12 +3371,10 @@ public final class TaxiRideProto {
         return this;
       }
 
-      @java.lang.Override
       public final boolean isInitialized() {
         return true;
       }
 
-      @java.lang.Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -3666,19 +3393,17 @@ public final class TaxiRideProto {
         return this;
       }
 
-      private protos.TaxiRideProto.City location_;
+      private protos.TaxiRideProto.City location_ = null;
       private com.google.protobuf.SingleFieldBuilderV3<
           protos.TaxiRideProto.City, protos.TaxiRideProto.City.Builder, protos.TaxiRideProto.CityOrBuilder> locationBuilder_;
       /**
        * <code>.protos.City location = 1;</code>
-       * @return Whether the location field is set.
        */
       public boolean hasLocation() {
         return locationBuilder_ != null || location_ != null;
       }
       /**
        * <code>.protos.City location = 1;</code>
-       * @return The location.
        */
       public protos.TaxiRideProto.City getLocation() {
         if (locationBuilder_ == null) {
@@ -3788,7 +3513,6 @@ public final class TaxiRideProto {
       private java.lang.Object firstName_ = "";
       /**
        * <code>string first_name = 2;</code>
-       * @return The firstName.
        */
       public java.lang.String getFirstName() {
         java.lang.Object ref = firstName_;
@@ -3804,7 +3528,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string first_name = 2;</code>
-       * @return The bytes for firstName.
        */
       public com.google.protobuf.ByteString
           getFirstNameBytes() {
@@ -3821,8 +3544,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string first_name = 2;</code>
-       * @param value The firstName to set.
-       * @return This builder for chaining.
        */
       public Builder setFirstName(
           java.lang.String value) {
@@ -3836,7 +3557,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string first_name = 2;</code>
-       * @return This builder for chaining.
        */
       public Builder clearFirstName() {
         
@@ -3846,8 +3566,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string first_name = 2;</code>
-       * @param value The bytes for firstName to set.
-       * @return This builder for chaining.
        */
       public Builder setFirstNameBytes(
           com.google.protobuf.ByteString value) {
@@ -3864,7 +3582,6 @@ public final class TaxiRideProto {
       private java.lang.Object lastName_ = "";
       /**
        * <code>string last_name = 3;</code>
-       * @return The lastName.
        */
       public java.lang.String getLastName() {
         java.lang.Object ref = lastName_;
@@ -3880,7 +3597,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string last_name = 3;</code>
-       * @return The bytes for lastName.
        */
       public com.google.protobuf.ByteString
           getLastNameBytes() {
@@ -3897,8 +3613,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string last_name = 3;</code>
-       * @param value The lastName to set.
-       * @return This builder for chaining.
        */
       public Builder setLastName(
           java.lang.String value) {
@@ -3912,7 +3626,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string last_name = 3;</code>
-       * @return This builder for chaining.
        */
       public Builder clearLastName() {
         
@@ -3922,8 +3635,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>string last_name = 3;</code>
-       * @param value The bytes for lastName to set.
-       * @return This builder for chaining.
        */
       public Builder setLastNameBytes(
           com.google.protobuf.ByteString value) {
@@ -3940,16 +3651,12 @@ public final class TaxiRideProto {
       private long id_ ;
       /**
        * <code>int64 id = 4;</code>
-       * @return The id.
        */
-      @java.lang.Override
       public long getId() {
         return id_;
       }
       /**
        * <code>int64 id = 4;</code>
-       * @param value The id to set.
-       * @return This builder for chaining.
        */
       public Builder setId(long value) {
         
@@ -3959,7 +3666,6 @@ public final class TaxiRideProto {
       }
       /**
        * <code>int64 id = 4;</code>
-       * @return This builder for chaining.
        */
       public Builder clearId() {
         
@@ -3967,13 +3673,11 @@ public final class TaxiRideProto {
         onChanged();
         return this;
       }
-      @java.lang.Override
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
-        return super.setUnknownFields(unknownFields);
+        return super.setUnknownFieldsProto3(unknownFields);
       }
 
-      @java.lang.Override
       public final Builder mergeUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.mergeUnknownFields(unknownFields);
@@ -3995,7 +3699,6 @@ public final class TaxiRideProto {
 
     private static final com.google.protobuf.Parser<UserRequest>
         PARSER = new com.google.protobuf.AbstractParser<UserRequest>() {
-      @java.lang.Override
       public UserRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
@@ -4013,7 +3716,6 @@ public final class TaxiRideProto {
       return PARSER;
     }
 
-    @java.lang.Override
     public protos.TaxiRideProto.UserRequest getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
@@ -4065,10 +3767,18 @@ public final class TaxiRideProto {
       "serRequest\"\000\0222\n\004Ride\022\023.protos.RideReques" +
       "t\032\023.protos.RideRequest\"\000b\006proto3"
     };
-    descriptor = com.google.protobuf.Descriptors.FileDescriptor
+    com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
+        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
+          public com.google.protobuf.ExtensionRegistry assignDescriptors(
+              com.google.protobuf.Descriptors.FileDescriptor root) {
+            descriptor = root;
+            return null;
+          }
+        };
+    com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
-        });
+        }, assigner);
     internal_static_protos_City_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_protos_City_fieldAccessorTable = new

@@ -25,7 +25,7 @@ for i in range(2):
 
   user_str = json.dumps(user)
   print(user)  
-  url = "http://localhost:8080/users"
+  url = "http://localhost:8085/users"
 
   headers = {
     'Content-Type': 'application/json'

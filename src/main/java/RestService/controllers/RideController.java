@@ -1,6 +1,8 @@
 package RestService.controllers;
 
 import com.google.protobuf.TextFormat;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -9,17 +11,27 @@ import TaxiRide.*;
 import RestService.repository.*;
 import org.springframework.web.server.ResponseStatusException;
 import protos.TaxiRideProto;
+import protos.TaxiServiceGrpc;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
 @RestController
+@RequestMapping
+
 public class RideController {
     private final RideRepository repository;
+    private TaxiServiceGrpc.TaxiServiceFutureStub stub;
+    private ManagedChannel channel;
 
-    public RideController() {
+    public RideController()
+    {
+        this.channel = ManagedChannelBuilder.forAddress("127.0.0.1", 8081)
+                .usePlaintext()
+                .build();
         this.repository = new RideRepository();
+        this.stub = TaxiServiceGrpc.newFutureStub(channel);
     }
 
     @PostMapping("/rides")
@@ -34,6 +46,9 @@ public class RideController {
                 .setId(new_ride.getId())
                 .setFirstName(new_ride.getFirst_name())
                 .setLastName(new_ride.getLast_name())
+                .setPd(new_ride.getPd())
+                .setPhoneNumber(new_ride.getPhone_number())
+                .setVacancies(new_ride.getVacancies())
                 .setDate(TaxiRideProto.Date.
                         newBuilder()
                         .setDay(ride_date.getDayOfMonth())
@@ -53,7 +68,7 @@ public class RideController {
                         .setX(src_city.getX())
                         .setY(src_city.getY())
                 ).build();
-
+        stub.ride(ride);
         // user grpc to send ride to all servers
     }
 
