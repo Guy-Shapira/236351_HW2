@@ -4,30 +4,58 @@ import TaxiRide.City;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import protos.TaxiRideProto;
 import protos.TaxiServiceGrpc;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 import TaxiRide.Ride;
 import TaxiRide.User;
 import RestService.repository.*;
+import zookeeper.Member;
+import zookeeper.ZkServiceImpl;
+import java.net.InetAddress;
+
 
 public class city_server {
     private final int port;
-    private RideRepository rides;
-    private UserRepository users;
+    private RideRepository rideRepository;
     private final Server server;
+    private final String city;
+    public static ZkServiceImpl zkService;
 
-    public city_server(int port) throws IOException {
-        this(ServerBuilder.forPort(port), port);
+    public city_server(int port, String city, String host) throws IOException {
+        this(ServerBuilder.forPort(port), port, city, host);
     }
-    public city_server(ServerBuilder<?> serverBuilder, int port) {
+    public city_server(ServerBuilder<?> serverBuilder, int port, String city, String host) {
         this.port = port;
         server = serverBuilder.addService(new TaxiImpl())
                 .build();
+        this.city = city;
+        this.rideRepository = new RideRepository();
+
+        zkService = new ZkServiceImpl(host);
+        System.out.println("connected to host: " + host);
+
+        zkService.createParentNode(null);
+        System.out.println("(if needed) create the zk main folder");
+
+        zkService.createParentNode(city);
+        System.out.println("(if needed) create the zk city folder");
+
+        try {
+            String ip_host = InetAddress.getLocalHost().getHostAddress() + ":" + port;
+            zkService.addToLiveNodes(ip_host, ip_host, city);
+            System.out.println("Znode added to zk sever");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Cant connect to local ip");
+
+        }
+        zkService.registerChildrenChangeWatcher(zkService.MEMBER + "/" + city, new Member());
+        System.out.println("added watcher / listener");
     }
 
     class TaxiImpl extends TaxiServiceGrpc.TaxiServiceImplBase{
@@ -46,6 +74,8 @@ public class city_server {
                     request.getVacancies(),
                     request.getPd());
             System.out.println(ride);
+            rideRepository.save(ride);
+            System.out.println(rideRepository.findAll());
         }
 
         @Override

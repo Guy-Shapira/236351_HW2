@@ -12,9 +12,11 @@ import RestService.repository.*;
 import org.springframework.web.server.ResponseStatusException;
 import protos.TaxiRideProto;
 import protos.TaxiServiceGrpc;
-
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import static RestService.main.zkService;
 
 @Slf4j
 @RestController
@@ -22,21 +24,19 @@ import java.util.List;
 
 public class RideController {
     private final RideRepository repository;
-    private TaxiServiceGrpc.TaxiServiceFutureStub stub;
-    private ManagedChannel channel;
 
     public RideController()
     {
-        this.channel = ManagedChannelBuilder.forAddress("127.0.0.1", 8081)
-                .usePlaintext()
-                .build();
         this.repository = new RideRepository();
-        this.stub = TaxiServiceGrpc.newFutureStub(channel);
     }
 
     @PostMapping("/rides")
-    void post_ride(@RequestBody Ride new_ride) {
+    void post_ride(@RequestBody Ride new_ride) throws InterruptedException {
+
+        // TODO: remove, only here to debug stuff
         Ride newRide = repository.save(new_ride);
+
+
         LocalDate ride_date = new_ride.getDate();
         City src_city = new_ride.getStart_location();
         City end_city = new_ride.getEnd_location();
@@ -68,10 +68,26 @@ public class RideController {
                         .setX(src_city.getX())
                         .setY(src_city.getY())
                 ).build();
+
+        List<String> city_servers  = zkService.getLiveNodes(src_city.getCity_name());
+        System.out.println(city_servers);
+        if (city_servers.size() == 0){
+            throw new RuntimeException("No server in zookeeper system for city : " + src_city.getCity_name());
+        }
+        String[] city_server_details = city_servers.get(0).split(":");
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
+                .usePlaintext()
+                .build();
+        System.out.println(channel);
+
+        // TODO: maybe change to blocking?
+        TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
         stub.ride(ride);
-        // user grpc to send ride to all servers
+        channel.awaitTermination(3, TimeUnit.SECONDS);
     }
 
+    // TODO: remove, only here to debug stuff
     @GetMapping("/rides")
     List<Ride> get_all_rides(){
         return repository.findAll();

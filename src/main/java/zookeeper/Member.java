@@ -11,7 +11,6 @@ public class Member implements IZkChildListener {
     @Override
     public void handleChildChange(String parentName, List<String> currentChildren) throws Exception {
         Cluster.getClusterInfo().getAllNodes().clear();
-        Cluster.getClusterInfo().getAllNodes().clear();
         Cluster.getClusterInfo().getAllNodes().addAll(currentChildren);
     }
 }

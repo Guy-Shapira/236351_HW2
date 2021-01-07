@@ -11,7 +11,7 @@ public interface ZkServiceAPI {
 
     List<String> getLiveNodes(String state);
 
-    void createAllParentNodes(String state);
+    void createParentNode(String state);
 
     String getZNodeData(String path);
 

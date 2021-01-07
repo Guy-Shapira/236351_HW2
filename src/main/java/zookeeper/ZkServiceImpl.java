@@ -11,7 +11,7 @@ import org.apache.zookeeper.CreateMode;
 
 @Slf4j
 public class ZkServiceImpl implements ZkServiceAPI {
-    private final String MEMBER = "/member_";
+    public final String MEMBER = "/member_";
 
     private ZkClient zkClient;
 
@@ -26,9 +26,8 @@ public class ZkServiceImpl implements ZkServiceAPI {
 
     @Override
     public void addToLiveNodes(String nodeName, String data, String city) {
-        city = "/" + city ;
         if(!zkClient.exists(MEMBER)){
-            zkClient.create(MEMBER, "all live z-nodes", CreateMode.EPHEMERAL);
+            zkClient.create(MEMBER, "all live z-nodes", CreateMode.PERSISTENT);
         }
         String childNode = MEMBER + city + "/" + nodeName;
         if(zkClient.exists(childNode)){
@@ -40,7 +39,7 @@ public class ZkServiceImpl implements ZkServiceAPI {
     @Override
     public List<String> getLiveNodes(String city) {
         if(!city.equals("")) {
-            if (!zkClient.exists(MEMBER + "/" + city)) {
+            if (!zkClient.exists(MEMBER + city)) {
                 throw new RuntimeException("No node /liveNodes exists");
             }
         }
@@ -48,16 +47,13 @@ public class ZkServiceImpl implements ZkServiceAPI {
             return zkClient.getChildren(MEMBER);
         }
         else {
-            return zkClient.getChildren(MEMBER + "/" + city);
+            return zkClient.getChildren(MEMBER + city);
         }
     }
 
     @Override
-    public void createAllParentNodes(String city) {
-        if(city != null){
-            city = "/" + city;
-        }
-        else{
+    public void createParentNode(String city) {
+        if(city == null){
             city = "";
         }
         if (!zkClient.exists(MEMBER +  city)) {
