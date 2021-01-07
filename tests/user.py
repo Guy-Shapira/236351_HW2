@@ -15,11 +15,15 @@ for i in range(2):
   location['city_id'] = i
   
   
+  date = "2019-12-31"
+
   user = {}
+  
   user['location'] = location
   user['first_name'] = list_of_first_names[i]
   user['last_name'] = list_of_last_names[i]
-
+  user['date'] = date
+  user['cities_in_path'] = [location, location, location]
 
   
 

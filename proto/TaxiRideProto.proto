@@ -31,7 +31,9 @@ message UserRequest {
     City location = 1;
     string first_name = 2;
     string last_name = 3;
-    int64 id = 4;
+    Date date = 4;
+    repeated City city_path = 5;
+    int64 id = 6;
 }
 
 service TaxiService {

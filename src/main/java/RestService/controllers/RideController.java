@@ -85,6 +85,9 @@ public class RideController {
         TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
         stub.ride(ride);
         channel.awaitTermination(3, TimeUnit.SECONDS);
+//        channel.shutdown();
+
+        // user grpc to send ride to all servers
     }
 
     // TODO: remove, only here to debug stuff

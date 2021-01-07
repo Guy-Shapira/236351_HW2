@@ -1,6 +1,7 @@
 package grpcTest;
 
 import TaxiRide.City;
+import com.google.protobuf.RepeatedFieldBuilder;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -10,6 +11,7 @@ import protos.TaxiServiceGrpc;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import TaxiRide.Ride;
 import TaxiRide.User;
@@ -81,9 +83,18 @@ public class city_server {
         @Override
         public void user(TaxiRideProto.UserRequest request, StreamObserver<TaxiRideProto.UserRequest> responseObserver) {
             TaxiRideProto.City source = request.getLocation();
+            TaxiRideProto.Date date = request.getDate();
+            LocalDate local_date = LocalDate.of(date.getYear(), date.getMonth(), date.getDay());
+            ArrayList<City> path = new ArrayList<>();
+            for (TaxiRideProto.City city : request.getCityPathList()){
+                path.add(new City(city.getCityName(), city.getCityId(), city.getX(), city.getY()));
+            }
             User user = new User(new City(source.getCityName(), source.getCityId(), source.getX(), source.getY()),
                     request.getFirstName(),
-                    request.getLastName());
+                    request.getLastName(),
+                    local_date,
+                    path);
+                    
             System.out.println(user);
         }
     }
