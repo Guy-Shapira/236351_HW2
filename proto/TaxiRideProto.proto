@@ -46,8 +46,15 @@ message DriveOptions{
     repeated RideRequest rideOptions = 1;
 }
 
+message DriveResponse {
+    int64 driveId = 1;
+    string server_name = 2;
+}
+
+
 service TaxiService {
     rpc User (UserRequest) returns (UserRequest) {};
     rpc Ride (RideRequest) returns (RideRequest) {};
-    rpc Path (DriveRequest) returns (stream RideRequest) {};
+    rpc Path (DriveRequest) returns (DriveResponse) {};
+    rpc CancelPath (DriveResponse) returns (DriveResponse) {};
 }

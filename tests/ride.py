@@ -1,23 +1,26 @@
 import requests
 import numpy as np
 import json 
+import time
+
 
 list_of_cities = ["Tel-Aviv", "Eilat"]
 list_of_coordinates = [2,3,5,10,7,11,23]
 names = ["Idan", "Itay", "Tomer", "Shai", "Shair"]
+start_time = time.time()
 
-for _ in range(1):
+for i in range(1):
   src_city = {}
   src_city['x'] = 10
-  src_city['y'] = 20
-  src_city['city_name'] = 'Haifa'
-  src_city['city_id'] = 1
+  src_city['y'] = 30
+  src_city['city_name'] = 'Eilat'
+  src_city['city_id'] = 3
   
   dst_city = {}
-  dst_city['x'] = 10
-  dst_city['y'] = 30
-  dst_city['city_name'] = 'Eilat'
-  dst_city['city_id'] = 2
+  dst_city['x'] = 50
+  dst_city['y'] = 50
+  dst_city['city_name'] = 'London'
+  dst_city['city_id'] = 4
 
   
   
@@ -30,8 +33,8 @@ for _ in range(1):
   ride['phone_number'] = 3
   ride['first_name'] = names[np.random.choice(len(names))]
   ride['last_name'] = 'F'
-  ride['vacancies'] = 2
-  ride['pd'] =  6000
+  ride['vacancies'] = 200
+  ride['pd'] =  10000
 
   
 
@@ -46,3 +49,4 @@ for _ in range(1):
   response = requests.request("POST", url, headers=headers, data = ride_str)
 
   print(response.text.encode('utf8'))
+  print((time.time() - start_time) / (i + 1))

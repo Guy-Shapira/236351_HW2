@@ -2,6 +2,8 @@ package TaxiRide;
 
 import java.time.LocalDate;
 import java.util.Objects;
+import Utils.Errors;
+
 
 public class Ride {
     private String first_name;
@@ -96,6 +98,18 @@ public class Ride {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public void upVacancies(){
+        this.vacancies += 1;
+    }
+
+    public void lowerVacancies() throws Errors.FullRide {
+        if (this.vacancies <= 0){
+            throw new Errors.FullRide();
+        }else{
+            this.vacancies -= 1;
+        }
     }
 
     @Override

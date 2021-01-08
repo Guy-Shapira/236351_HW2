@@ -16,7 +16,7 @@ public class ZkServiceImpl implements ZkServiceAPI {
     private ZkClient zkClient;
 
     public ZkServiceImpl(String zkServers) {
-        zkClient = new ZkClient(zkServers , 12000, 3000);
+        zkClient = new ZkClient(zkServers , 120000, 30000);
     }
 
     public void closeConnection(){
