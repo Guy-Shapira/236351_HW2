@@ -4,6 +4,7 @@ import RestService.repository.RideRepository;
 import RestService.repository.UserRepository;
 import TaxiRide.City;
 import TaxiRide.User;
+import Utils.protoUtils;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.Message;
 import io.grpc.ManagedChannel;
@@ -20,8 +21,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
-
 import static RestService.main.zkService;
+import Utils.protoUtils.*;
 
 @Slf4j
 @RestController
@@ -45,32 +46,14 @@ public class UserController {
                 .setId(new_user.getId())
                 .setFirstName(new_user.getFirst_name())
                 .setLastName(new_user.getLast_name())
-                .setLocation(TaxiRideProto.City
-                        .newBuilder()
-                        .setCityId(user_city.getCity_id())
-                        .setCityName(user_city.getCity_name())
-                        .setX(user_city.getX())
-                        .setY(user_city.getY()))
-                .setDate(TaxiRideProto.Date.
-                        newBuilder()
-                        .setDay(new_user.getDate().getDayOfMonth())
-                        .setMonth(new_user.getDate().getMonthValue())
-                        .setYear(new_user.getDate().getYear()));
-
-        Descriptors.FieldDescriptor cities_in_path = TaxiRideProto.UserRequest.
-                getDescriptor().findFieldByName("city_path");
+                .setLocation(protoUtils.getProtoFromCity(user_city))
+                .setDate(protoUtils.getProtoFromDate(new_user.getDate()));
 
 
         for (City city : new_user.getCities_in_path()){
-            user_builder.addCityPath(TaxiRideProto.City.newBuilder()
-                    .setCityId(city.getCity_id())
-                    .setCityName(city.getCity_name())
-                    .setX(city.getX())
-                    .setY(city.getY()))
+            user_builder.addCityPath(protoUtils.getProtoFromCity(city))
                     .build();
         }
-//        Message.Builder pathBuilder = user_builder.addRepeatedField(cities_in_path, new_user.getCities_in_path());
-//        user_builder.addRepeatedField(cities_in_path, pathBuilder.build());
 
         TaxiRideProto.UserRequest user = user_builder.build();
         System.out.println(user);

@@ -17,6 +17,6 @@ public class main {
     }
 
     static void startup_zk(String zkServers){
-        zkService = new ZkServiceImpl("localhost:2381");
+        zkService = new ZkServiceImpl(zkServers);
     }
 }

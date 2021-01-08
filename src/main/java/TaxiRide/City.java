@@ -1,6 +1,8 @@
 package TaxiRide;
 
 
+import protos.TaxiRideProto;
+
 public class City {
     private String city_name;
     private Integer city_id;
@@ -12,6 +14,13 @@ public class City {
         this.city_id = city_id;
         this.x = x;
         this.y = y;
+    }
+
+    public City(TaxiRideProto.City city_proto){
+        this.city_name = city_proto.getCityName();
+        this.city_id = city_proto.getCityId();
+        this.x = city_proto.getX();
+        this.y = city_proto.getY();
     }
 
     public String getCity_name() {

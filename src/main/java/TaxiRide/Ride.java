@@ -133,4 +133,15 @@ public class Ride {
                 ", id=" + id +
                 '}';
     }
+
+    public boolean in_deviation_distance(City another_city){
+        Integer lhs = (this.end_location.getX() - this.start_location.getX()) *
+                (this.start_location.getY() - another_city.getY());
+        Integer rhs = (this.start_location.getX() - another_city.getX())
+                * (this.end_location.getY() - start_location.getY());
+        double bottom_part = Math.sqrt(Math.pow(this.end_location.getX() - this.start_location.getX(), 2) +
+                        Math.pow(this.end_location.getY() - this.start_location.getY(), 2));
+        double total_dist = Math.abs(lhs - rhs) / bottom_part;
+        return total_dist < this.getPd();
+    }
 }

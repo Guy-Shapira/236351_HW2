@@ -36,7 +36,18 @@ message UserRequest {
     int64 id = 6;
 }
 
+message DriveRequest{
+    City source = 1;
+    City dst = 2;
+    Date date = 3;
+}
+
+message DriveOptions{
+    repeated RideRequest rideOptions = 1;
+}
+
 service TaxiService {
     rpc User (UserRequest) returns (UserRequest) {};
     rpc Ride (RideRequest) returns (RideRequest) {};
+    rpc Path (DriveRequest) returns (stream RideRequest) {};
 }

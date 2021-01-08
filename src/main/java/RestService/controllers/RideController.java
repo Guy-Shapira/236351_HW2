@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static RestService.main.zkService;
+import Utils.protoUtils;
+
 
 @Slf4j
 @RestController
@@ -49,25 +51,10 @@ public class RideController {
                 .setPd(new_ride.getPd())
                 .setPhoneNumber(new_ride.getPhone_number())
                 .setVacancies(new_ride.getVacancies())
-                .setDate(TaxiRideProto.Date.
-                        newBuilder()
-                        .setDay(ride_date.getDayOfMonth())
-                        .setMonth(ride_date.getMonthValue())
-                        .setYear(ride_date.getYear()))
-                .setEndLocation(TaxiRideProto.City
-                        .newBuilder()
-                        .setCityId(end_city.getCity_id())
-                        .setCityName(end_city.getCity_name())
-                        .setX(end_city.getX())
-                        .setY(end_city.getY())
-                )
-                .setStartLocation(TaxiRideProto.City
-                        .newBuilder()
-                        .setCityId(src_city.getCity_id())
-                        .setCityName(src_city.getCity_name())
-                        .setX(src_city.getX())
-                        .setY(src_city.getY())
-                ).build();
+                .setDate(protoUtils.getProtoFromDate(ride_date))
+                .setEndLocation(protoUtils.getProtoFromCity(end_city))
+                .setStartLocation(protoUtils.getProtoFromCity(src_city))
+                .build();
 
         List<String> city_servers  = zkService.getLiveNodes(src_city.getCity_name());
         System.out.println(city_servers);
@@ -85,7 +72,6 @@ public class RideController {
         TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
         stub.ride(ride);
         channel.awaitTermination(3, TimeUnit.SECONDS);
-//        channel.shutdown();
 
         // user grpc to send ride to all servers
     }

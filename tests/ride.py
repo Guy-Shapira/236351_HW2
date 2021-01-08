@@ -6,16 +6,16 @@ list_of_cities = ["Tel-Aviv", "Eilat"]
 list_of_coordinates = [2,3,5,10,7,11,23]
 names = ["Idan", "Itay", "Tomer", "Shai", "Shair"]
 
-for _ in range(3):
+for _ in range(1):
   src_city = {}
-  src_city['x'] = np.random.choice(100)
-  src_city['y'] = np.random.choice(100)
-  src_city['city_name'] = 'Tel-Aviv'
+  src_city['x'] = 10
+  src_city['y'] = 20
+  src_city['city_name'] = 'Haifa'
   src_city['city_id'] = 1
   
   dst_city = {}
-  dst_city['x'] = np.random.choice(100)
-  dst_city['y'] = np.random.choice(100)
+  dst_city['x'] = 10
+  dst_city['y'] = 30
   dst_city['city_name'] = 'Eilat'
   dst_city['city_id'] = 2
 
@@ -31,7 +31,7 @@ for _ in range(3):
   ride['first_name'] = names[np.random.choice(len(names))]
   ride['last_name'] = 'F'
   ride['vacancies'] = 2
-  ride['pd'] =  6
+  ride['pd'] =  6000
 
   
 
