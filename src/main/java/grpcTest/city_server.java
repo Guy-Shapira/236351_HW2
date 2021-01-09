@@ -2,11 +2,14 @@ package grpcTest;
 
 import TaxiRide.City;
 import Utils.Errors;
+import Utils.UserRepoInstance;
 import Utils.protoUtils;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.RepeatedFieldBuilder;
 import io.grpc.*;
 import io.grpc.stub.StreamObserver;
+import org.I0Itec.zkclient.exception.ZkNoNodeException;
+import org.apache.zookeeper.KeeperException;
 import protos.TaxiRideProto;
 import protos.TaxiServiceGrpc;
 
@@ -28,53 +31,43 @@ import static RestService.main.zkService;
 
 
 public class city_server {
+    private final String RIDE = "Ride";
+    private final String USER = "User";
     private final int port;
     private RideRepository rideRepository;
+    private UserRepository userRepository;
     private final Server server;
     private final String city;
+    private final String function;
     public static ZkServiceImpl zkService;
+    private final String ip_host;
 
-    public city_server(int port, String city, String host) throws IOException {
-        this(ServerBuilder.forPort(port), port, city, host);
+    public city_server(int port, String city, String host, String function) throws IOException {
+        this(ServerBuilder.forPort(port), port, city, host, function);
     }
-    public city_server(ServerBuilder<?> serverBuilder, int port, String city, String host) {
+    public city_server(ServerBuilder<?> serverBuilder, int port, String city, String host, String function) throws UnknownHostException {
         this.port = port;
         server = serverBuilder.addService(new TaxiImpl())
                 .build();
         this.city = city;
         this.rideRepository = new RideRepository();
+        this.userRepository = new UserRepository();
+        this.function = function;
+        this.ip_host = InetAddress.getLocalHost().getHostAddress() + ":" + port;
 
         zkService = new ZkServiceImpl(host);
         System.out.println("connected to host: " + host);
 
-        zkService.createParentNode(null);
+        zkService.createParentNode(null, function);
         System.out.println("(if needed) create the zk main folder");
 
-        zkService.createParentNode(city);
+        zkService.createParentNode(city, function);
         System.out.println("(if needed) create the zk city folder");
 
-        try {
-            String ip_host = InetAddress.getLocalHost().getHostAddress() + ":" + port;
-            zkService.addToLiveNodes(ip_host, ip_host, city);
-            System.out.println("Znode added to zk sever");
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Cant connect to local ip");
-
-        }
+        zkService.addToLiveNodes(this.ip_host, this.ip_host, city, function);
+        System.out.println("Znode added to zk sever");
         zkService.registerChildrenChangeWatcher(zkService.MEMBER + "/" + city, new Member());
         System.out.println("added watcher / listener");
-    }
-
-    public ArrayList<Ride> getMatchingRides(City src, City dst, LocalDate date) {
-        ArrayList<Ride> res = new ArrayList<>();
-        for (Ride ride_in_repo : rideRepository.findAll()) {
-            if (ride_in_repo.in_deviation_distance(src) && ride_in_repo.in_deviation_distance(dst) &&
-                    ride_in_repo.getDate().equals(date) && ride_in_repo.getVacancies() > 0) {
-                res.add(ride_in_repo);
-            }
-        }
-        return res;
     }
 
     class TaxiImpl extends TaxiServiceGrpc.TaxiServiceImplBase {
@@ -97,6 +90,28 @@ public class city_server {
             System.out.println(rideRepository.findAll());
         }
 
+
+        public void sendAllDuplicates(TaxiRideProto.UserRepoRequest userRepoRequest){
+            List<String> duplicates = zkService.getLiveNodes(city, function);
+            duplicates.remove(ip_host);
+
+            for (String duplicate : duplicates){
+                String[] city_server_details = duplicate.split(":");
+                ManagedChannel channel = ManagedChannelBuilder
+                        .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
+                        .usePlaintext()
+                        .build();
+                TaxiServiceGrpc.TaxiServiceFutureStub sendUser = TaxiServiceGrpc.newFutureStub(channel);
+                sendUser.duplicateUser(userRepoRequest);
+                try {
+                    channel.awaitTermination(200, TimeUnit.MILLISECONDS);
+                } catch (InterruptedException e) {
+                    // maybe see if duplicate crached or something
+                    e.printStackTrace();
+                }
+            }
+        }
+
         @Override
         public void user(TaxiRideProto.UserRequest request, StreamObserver<TaxiRideProto.DriveOptions> responseObserver) {
             TaxiRideProto.City source = request.getLocation();
@@ -111,18 +126,26 @@ public class city_server {
                     local_date,
                     path);
 
+            UserRepoInstance newUser = userRepository.save(user);
             // TODO : remove - debug use only
 
             System.out.println(user);
 
+            TaxiRideProto.UserRepoRequest userRepoRequest = protoUtils.getProtoFromUser(newUser).build();
+            sendAllDuplicates(userRepoRequest);
+
             TaxiRideProto.DriveOptions.Builder res = TaxiRideProto.DriveOptions.newBuilder();
             ArrayList<Ride> foundRides = setPathCity(local_date, new City(source), path);
-            if (foundRides != null){
+            if (foundRides != null) {
                 for (Ride ride : foundRides) {
                     res.addRideOptions(protoUtils.getProtoFromRide(ride)).build();
                 }
                 responseObserver.onNext(res.build());
-            }else{
+                UserRepoInstance updatedUser = userRepository.changeStatusById(newUser.getId());
+                TaxiRideProto.UserRepoRequest updatedUserRequest = protoUtils.getProtoFromUser(updatedUser).build();
+                sendAllDuplicates(updatedUserRequest);
+
+            } else {
                 responseObserver.onNext(null);
             }
             responseObserver.onCompleted();
@@ -132,119 +155,130 @@ public class city_server {
             ArrayList<Long> chosenRides = new ArrayList<>();
             ArrayList<String> cityNames = new ArrayList<>();
             ArrayList<Ride> rides = new ArrayList<>();
-            // For now: let assume only one city in path: path = [end], and we want src -> end @ date
             City currentCity = source;
             for (City pathCity : path) {
                 boolean choseOptionForLeg = false;
-                ArrayList<Ride> currentOptions = getMatchingRides(currentCity, pathCity, local_date);
-                if (currentOptions.size() != 0) {
-                    for (Ride ride : currentOptions) {
-                        try {
-                            ride.lowerVacancies();
-                            choseOptionForLeg = true;
-                            chosenRides.add(ride.getId());
-                            cityNames.add("");
-                            rides.add(ride);
-                            break;
-                        } catch (Errors.FullRide fullRide) {
-                            continue;
-                        }
-                    }
+                List<String> all_cities = null;
+                try {
+                    all_cities = zkService.getLiveNodes("", "");
+                } catch (ZkNoNodeException e) {
+                    System.out.println("No cities in system!");
+                    return null;
                 }
-                if (!choseOptionForLeg) {
-                    List<String> all_cities = zkService.getLiveNodes("");
-                    // if more then one leader per city - then in the previous step there should be a call
-                    // for other
+                // TODO: debug- remove
+                System.out.println(all_cities);
+                TaxiRideProto.DriveRequest driveRequest = TaxiRideProto.DriveRequest
+                        .newBuilder()
+                        .setSource(protoUtils.getProtoFromCity(currentCity))
+                        .setDst(protoUtils.getProtoFromCity(pathCity))
+                        .setDate(protoUtils.getProtoFromDate(local_date))
+                        .build();
 
-                    all_cities.remove(currentCity.getCity_name());
-                    // TODO: debug- remove
-                    System.out.println(all_cities);
-                    TaxiRideProto.DriveRequest driveRequest = TaxiRideProto.DriveRequest
-                            .newBuilder()
-                            .setSource(protoUtils.getProtoFromCity(currentCity))
-                            .setDst(protoUtils.getProtoFromCity(pathCity))
-                            .setDate(protoUtils.getProtoFromDate(local_date))
-                            .build();
-
-                    for (String city_name : all_cities) {
-                        List<String> servers = zkService.getLiveNodes(city_name);
+                for (String city_name : all_cities) {
+                    ManagedChannel channel = null;
+                    try {
+                        List<String> servers = zkService.getLiveNodes(city_name, RIDE);
                         if (servers.size() == 0) {
                             continue;
                         }
-                        String[] city_server_details = zkService.getLiveNodes(city_name).get(0).split(":");
-                        ManagedChannel channel = ManagedChannelBuilder
+                        String[] city_server_details = zkService.getLiveNodes(city_name, RIDE).get(0).split(":");
+                        channel = ManagedChannelBuilder
                                 .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
                                 .usePlaintext()
                                 .build();
                         TaxiServiceGrpc.TaxiServiceBlockingStub stub = TaxiServiceGrpc.newBlockingStub(channel);
-                        try {
-                            TaxiRideProto.DriveResponse response = stub.path(driveRequest);
-                            long driveId = response.getDriveId();
-                            if (driveId < 0) {
-                                System.out.println(city_name + " id < 0");
-                                continue;
-                            }
-                            chosenRides.add(driveId);
-                            cityNames.add(response.getServerName());
-                            rides.add(new Ride(response.getRide()));
-                            System.out.println("-------------");
-                            choseOptionForLeg = true;
-                            break;
-                        } catch (StatusRuntimeException e) {
-                            System.out.println("server " + city_name + " took to long to respond");
-                        } finally {
+                        TaxiRideProto.DriveResponse response = stub.path(driveRequest);
+                        long driveId = response.getDriveId();
+                        if (driveId < 0) {
+                            System.out.println(city_name + " id < 0");
+                            continue;
+                        }
+                        chosenRides.add(driveId);
+                        cityNames.add(response.getServerName());
+                        rides.add(new Ride(response.getRide()));
+                        System.out.println("-------------");
+                        choseOptionForLeg = true;
+                        break;
+                    } catch (ZkNoNodeException e) {
+                        System.out.println("No nodes : " + e);
+                        continue;
+                    } catch (StatusRuntimeException e) {
+                        System.out.println("server " + city_name + " took to long to respond");
+                    } finally {
+                        if (channel != null) {
                             channel.shutdown();
                         }
                     }
                 }
                 if (!choseOptionForLeg) {
-                        System.out.println("Current City : " + currentCity.getCity_name());
-                        System.out.println("Dst City : " + pathCity.getCity_name());
+                    System.out.println("Current City : " + currentCity.getCity_name());
+                    System.out.println("Dst City : " + pathCity.getCity_name());
 
-                        System.out.println("Could not manage to book the trip!");
-                        for (int i = 0; i < chosenRides.size(); i++) {
-                            long it_driveId = chosenRides.get(i);
-                            String it_server_name = cityNames.get(i);
-                            if (it_server_name.equals("")) {
-                                try {
-                                    rideRepository.getRide(it_driveId).upVacancies();
-                                } catch (Errors.RideNotExists rideNotExists) {
-                                    rideNotExists.printStackTrace();
-                                }
-                            } else {
-                                String[] city_server_details = zkService.getLiveNodes(it_server_name).get(0).split(":");
-                                ManagedChannel channel = ManagedChannelBuilder
-                                        .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
-                                        .usePlaintext()
-                                        .build();
-                                TaxiServiceGrpc.TaxiServiceFutureStub stubFuture = TaxiServiceGrpc.newFutureStub(channel);
-                                TaxiRideProto.DriveResponse cancelPath = TaxiRideProto.DriveResponse
-                                        .newBuilder()
-                                        .setDriveId(it_driveId)
-                                        .setServerName("")
-                                        .setFlag(-1)
-                                        .build();
-                                stubFuture.cancelPath(cancelPath);
-                                try {
-                                    channel.awaitTermination(500, TimeUnit.MILLISECONDS);
-                                } catch (InterruptedException e) {
-                                    System.out.println("Serever " + it_server_name + " took to long to responde");
-                                }
-                            }
+                    System.out.println("Could not manage to book the trip!");
+                    for (int i = 0; i < chosenRides.size(); i++) {
+                        long it_driveId = chosenRides.get(i);
+                        String it_server_name = cityNames.get(i);
+                        String[] city_server_details;
+                        try {
+                            city_server_details = zkService.getLiveNodes(it_server_name, RIDE).get(0).split(":");
+                        } catch (ZkNoNodeException e) {
+                            System.out.println("Could not undo action because " + e);
+                            return null;
                         }
-                        return null;
-                    }else{
-                        currentCity = pathCity;
-
+                        ManagedChannel channel = ManagedChannelBuilder
+                                .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
+                                .usePlaintext()
+                                .build();
+                        TaxiServiceGrpc.TaxiServiceFutureStub stubFuture = TaxiServiceGrpc.newFutureStub(channel);
+                        TaxiRideProto.DriveResponse cancelPath = TaxiRideProto.DriveResponse
+                                .newBuilder()
+                                .setDriveId(it_driveId)
+                                .setServerName("")
+                                .setFlag(-1)
+                                .build();
+                        stubFuture.cancelPath(cancelPath);
+                        try {
+                            channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+                        } catch (InterruptedException e) {
+                            System.out.println("Serever " + it_server_name + " took to long to responde");
+                        }
                     }
+
+                    return null;
+                } else {
+                    currentCity = pathCity;
+
+                }
+
+                System.out.println("Managed to find path!");
+                System.out.println(cityNames);
+                return rides;
             }
-            System.out.println("Managed to find path!");
-            System.out.println(cityNames);
-            return rides;
+            return null;
+        }
+
+        @Override
+        public void duplicateUser(TaxiRideProto.UserRepoRequest request, StreamObserver<TaxiRideProto.UserRepoRequest> responseObserver) {
+            System.out.println(request);
+            TaxiRideProto.UserRequest userRequest = request.getUser();
+            TaxiRideProto.City source = userRequest.getLocation();
+            LocalDate local_date = protoUtils.getDateFromProto(userRequest.getDate());
+            ArrayList<City> path = new ArrayList<>();
+            for (TaxiRideProto.City city : userRequest.getCityPathList()) {
+                path.add(new City(city));
+            }
+            UserRepoInstance newUserRepoInstance = new UserRepoInstance(new City(source),
+                    userRequest.getFirstName(),
+                    userRequest.getLastName(),
+                    local_date,
+                    path,
+                    UserRepoInstance.UserStatus.values()[request.getStatus()]);
+            userRepository.save(newUserRepoInstance);
         }
 
         @Override
         public void path(TaxiRideProto.DriveRequest request, StreamObserver<TaxiRideProto.DriveResponse> responseObserver) {
+
             City source = new City(request.getSource());
             City dst = new City(request.getDst());
             TaxiRideProto.Date date = request.getDate();

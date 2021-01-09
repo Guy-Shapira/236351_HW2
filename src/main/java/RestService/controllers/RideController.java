@@ -27,6 +27,7 @@ import Utils.protoUtils;
 
 public class RideController {
     private final RideRepository repository;
+    private static final String FUNCTION = "Ride";
 
     public RideController()
     {
@@ -58,7 +59,8 @@ public class RideController {
                 .build();
 
         try {
-            String cityRideLeader = zkService.makeAndReturnLeaderForCity(src_city.getCity_name());
+            String cityRideLeader = zkService.makeAndReturnLeaderForCity(src_city.getCity_name(), FUNCTION);
+            System.out.println("Found " + cityRideLeader + " as leader for function" + FUNCTION);
             String[] city_server_details = cityRideLeader.split(":");
             ManagedChannel channel = ManagedChannelBuilder
                     .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
@@ -71,7 +73,7 @@ public class RideController {
             channel.awaitTermination(500, TimeUnit.MILLISECONDS);
             return "Your ride was posted! Have a safe ride";
 
-        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity  leaderError){
+        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError){
             System.out.println("Could not find server for wanted city " + src_city.getCity_name());
             return "An error occurred, please try again later!";
         }

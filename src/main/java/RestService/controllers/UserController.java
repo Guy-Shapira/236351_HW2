@@ -1,14 +1,13 @@
 package RestService.controllers;
 
-import RestService.repository.RideRepository;
 import RestService.repository.UserRepository;
 import TaxiRide.City;
 import TaxiRide.Ride;
 import TaxiRide.User;
+import Utils.Errors;
+import Utils.UserRepoInstance;
 import Utils.protoUtils;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.protobuf.Descriptors;
-import com.google.protobuf.Message;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -19,18 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 import protos.TaxiRideProto;
 import protos.TaxiServiceGrpc;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import static RestService.main.zkService;
-import Utils.protoUtils.*;
 
 @Slf4j
 @RestController
 public class UserController {
+    private final String FUNCTION = "User";
     private final UserRepository repository;
     public UserController()
     {
@@ -39,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    void post_ride(@RequestBody User new_user) {
+    String post_ride(@RequestBody User new_user) {
 
         // TODO: remove, only here to debug stuff
         User newUser = repository.save(new_user);
@@ -47,11 +44,11 @@ public class UserController {
         City user_city = new_user.getLocation();
         TaxiRideProto.UserRequest.Builder user_builder = TaxiRideProto.UserRequest
                 .newBuilder()
-                .setId(new_user.getId())
-                .setFirstName(new_user.getFirst_name())
-                .setLastName(new_user.getLast_name())
+                .setId(newUser.getId())
+                .setFirstName(newUser.getFirst_name())
+                .setLastName(newUser.getLast_name())
                 .setLocation(protoUtils.getProtoFromCity(user_city))
-                .setDate(protoUtils.getProtoFromDate(new_user.getDate()));
+                .setDate(protoUtils.getProtoFromDate(newUser.getDate()));
 
 
         for (City city : new_user.getCities_in_path()){
@@ -61,11 +58,14 @@ public class UserController {
 
         TaxiRideProto.UserRequest user = user_builder.build();
         System.out.println(user);
-        List<String> city_servers  = zkService.getLiveNodes(user_city.getCity_name());
-        if (city_servers.size() == 0){
-            throw new RuntimeException("No server in zookeeper system for city : " + user_city.getCity_name());
+        String city_server = null;
+        try {
+            city_server = zkService.makeAndReturnLeaderForCity(user_city.getCity_name(), FUNCTION);
+        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError){
+            System.out.println("Could not find server for wanted city " + user_city.getCity_name());
+            return "An error occurred, please try again later!";
         }
-        String[] city_server_details = city_servers.get(0).split(":");
+        String[] city_server_details = city_server.split(":");
         ManagedChannel channel = ManagedChannelBuilder
                 .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
                 .usePlaintext()
@@ -76,26 +76,29 @@ public class UserController {
         ListenableFuture<TaxiRideProto.DriveOptions> response = stub.user(user);
         try {
             List<Ride> pathRides = new ArrayList<>();
-            if (response == null)
+            List<TaxiRideProto.RideRequest> path = response.get().getRideOptionsList();
+            if (path.size() == 0)
             {
                 System.out.println("Could not find a path!");
+                return "Sorry, we could not find a path for you...";
             }else {
-                for (TaxiRideProto.RideRequest driveLeg : response.get().getRideOptionsList()) {
+                for (TaxiRideProto.RideRequest driveLeg : path) {
                     pathRides.add(new Ride(driveLeg));
                 }
                 System.out.println(response.get().getRideOptionsList());
                 channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+                return response.get().getRideOptionsList().toString();
             }
 
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            return "An error occurred, please try again later!";
         }
-
     }
 
     // TODO: remove, only here to debug stuff
     @GetMapping("/users")
-    List<User> get_all_rides(){
+    List<UserRepoInstance> get_all_rides(){
         return repository.findAll();
     }
 }

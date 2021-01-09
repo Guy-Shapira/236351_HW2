@@ -2,6 +2,7 @@ package Utils;
 
 import TaxiRide.City;
 import TaxiRide.Ride;
+import TaxiRide.User;
 import protos.TaxiRideProto;
 
 import java.time.LocalDate;
@@ -41,4 +42,39 @@ public class protoUtils {
                 .setVacancies(ride.getVacancies())
                 .setPd(ride.getPd());
     }
+
+    public static TaxiRideProto.UserRepoRequest.Builder getProtoFromUser(User user){
+
+        TaxiRideProto.UserRequest.Builder userRequest = TaxiRideProto.UserRequest
+                .newBuilder()
+                .setFirstName(user.getFirst_name())
+                .setLastName(user.getLast_name())
+                .setDate(getProtoFromDate(user.getDate()))
+                .setId(user.getId());
+        for (City city : user.getCities_in_path()){
+            userRequest.addCityPath(getProtoFromCity(city).build());
+        }
+        return TaxiRideProto.UserRepoRequest
+                .newBuilder()
+                .setUser(userRequest)
+                .setStatus(UserRepoInstance.UserStatus.PENDING.ordinal());
+    }
+
+    public static TaxiRideProto.UserRepoRequest.Builder getProtoFromUser(UserRepoInstance user){
+
+        TaxiRideProto.UserRequest.Builder userRequest = TaxiRideProto.UserRequest
+                .newBuilder()
+                .setFirstName(user.getFirst_name())
+                .setLastName(user.getLast_name())
+                .setDate(getProtoFromDate(user.getDate()))
+                .setId(user.getId());
+        for (City city : user.getCities_in_path()){
+            userRequest.addCityPath(getProtoFromCity(city).build());
+        }
+        return TaxiRideProto.UserRepoRequest
+                .newBuilder()
+                .setUser(userRequest)
+                .setStatus(user.getStatus().ordinal());
+    }
+
 }

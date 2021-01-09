@@ -55,10 +55,16 @@ message DriveResponse {
     }
 }
 
+message UserRepoRequest{
+    UserRequest user = 1;
+    int32 status = 2;
+}
+
 
 service TaxiService {
     rpc User (UserRequest) returns (DriveOptions) {};
     rpc Ride (RideRequest) returns (RideRequest) {};
     rpc Path (DriveRequest) returns (DriveResponse) {};
     rpc CancelPath (DriveResponse) returns (DriveResponse) {};
+    rpc DuplicateUser (UserRepoRequest) returns (UserRepoRequest) {};
 }
