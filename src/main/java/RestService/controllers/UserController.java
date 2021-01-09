@@ -3,8 +3,10 @@ package RestService.controllers;
 import RestService.repository.RideRepository;
 import RestService.repository.UserRepository;
 import TaxiRide.City;
+import TaxiRide.Ride;
 import TaxiRide.User;
 import Utils.protoUtils;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.protobuf.Descriptors;
 import com.google.protobuf.Message;
 import io.grpc.ManagedChannel;
@@ -18,8 +20,10 @@ import protos.TaxiRideProto;
 import protos.TaxiServiceGrpc;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import static RestService.main.zkService;
 import Utils.protoUtils.*;
@@ -35,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    void post_ride(@RequestBody User new_user) throws InterruptedException {
+    void post_ride(@RequestBody User new_user) {
 
         // TODO: remove, only here to debug stuff
         User newUser = repository.save(new_user);
@@ -69,10 +73,23 @@ public class UserController {
 
         // TODO: maybe change to blocking?
         TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
-        stub.user(user);
-        channel.awaitTermination(3, TimeUnit.SECONDS);
+        ListenableFuture<TaxiRideProto.DriveOptions> response = stub.user(user);
+        try {
+            List<Ride> pathRides = new ArrayList<>();
+            if (response == null)
+            {
+                System.out.println("Could not find a path!");
+            }else {
+                for (TaxiRideProto.RideRequest driveLeg : response.get().getRideOptionsList()) {
+                    pathRides.add(new Ride(driveLeg));
+                }
+                System.out.println(response.get().getRideOptionsList());
+                channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+            }
 
-
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 

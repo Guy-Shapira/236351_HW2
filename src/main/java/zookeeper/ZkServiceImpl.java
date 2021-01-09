@@ -13,6 +13,7 @@ import org.apache.zookeeper.CreateMode;
 public class ZkServiceImpl implements ZkServiceAPI {
     public final String MEMBER = "/member";
 
+
     private ZkClient zkClient;
 
     public ZkServiceImpl(String zkServers) {

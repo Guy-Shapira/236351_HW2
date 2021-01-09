@@ -71,7 +71,7 @@ public class RideController {
         // TODO: maybe change to blocking?
         TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
         stub.ride(ride);
-        channel.awaitTermination(3, TimeUnit.SECONDS);
+        channel.awaitTermination(500, TimeUnit.MILLISECONDS);
 
         // user grpc to send ride to all servers
     }

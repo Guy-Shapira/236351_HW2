@@ -3,7 +3,8 @@ package TaxiRide;
 import java.time.LocalDate;
 import java.util.Objects;
 import Utils.Errors;
-
+import protos.TaxiRideProto;
+import Utils.protoUtils;
 
 public class Ride {
     private String first_name;
@@ -27,6 +28,18 @@ public class Ride {
         this.vacancies = vacancies;
         this.pd = pd;
     }
+
+    public Ride(TaxiRideProto.RideRequest driveLeg) {
+        this.first_name = driveLeg.getFirstName();
+        this.last_name = driveLeg.getLastName();
+        this.phone_number = driveLeg.getPhoneNumber();
+        this.start_location = new City(driveLeg.getStartLocation());
+        this.end_location = new City(driveLeg.getEndLocation());
+        this.date = protoUtils.getDateFromProto(driveLeg.getDate());
+        this.vacancies = driveLeg.getVacancies();
+        this.pd = driveLeg.getPd();
+    }
+
 
     public String getFirst_name() {
         return first_name;

@@ -1,6 +1,7 @@
 package Utils;
 
 import TaxiRide.City;
+import TaxiRide.Ride;
 import protos.TaxiRideProto;
 
 import java.time.LocalDate;
@@ -26,5 +27,18 @@ public class protoUtils {
 
     public static LocalDate getDateFromProto(TaxiRideProto.Date protoDate){
         return LocalDate.of(protoDate.getYear(), protoDate.getMonth(), protoDate.getDay());
+    }
+
+    public static  TaxiRideProto.RideRequest.Builder getProtoFromRide(Ride ride){
+        return TaxiRideProto.RideRequest
+                .newBuilder()
+                .setFirstName(ride.getFirst_name())
+                .setLastName(ride.getLast_name())
+                .setPhoneNumber(ride.getPhone_number())
+                .setDate(getProtoFromDate(ride.getDate()))
+                .setStartLocation(getProtoFromCity(ride.getStart_location()))
+                .setEndLocation(getProtoFromCity(ride.getEnd_location()))
+                .setVacancies(ride.getVacancies())
+                .setPd(ride.getPd());
     }
 }

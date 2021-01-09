@@ -10,12 +10,12 @@ list_of_coordinates = [2,3,5,10,7,11,23]
 
 start_time = time.time()
 
-for i in range(1):
+for i in range(10):
   location = {}
   location['x'] = 15
   location['y'] = 25
   location['city_name'] = "Tel-Aviv"
-  location['city_id'] = 5
+  location['city_id'] = 4
 
   location1 = {}
   location1['x'] = 10
@@ -43,7 +43,7 @@ for i in range(1):
   user['first_name'] = list_of_first_names[0]
   user['last_name'] = list_of_last_names[0]
   user['date'] = date
-  user['cities_in_path'] = [location1, location2, location3]
+  user['cities_in_path'] = [location1, location2]
 
   
 

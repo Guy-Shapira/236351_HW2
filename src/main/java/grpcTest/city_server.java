@@ -98,7 +98,7 @@ public class city_server {
         }
 
         @Override
-        public void user(TaxiRideProto.UserRequest request, StreamObserver<TaxiRideProto.UserRequest> responseObserver) {
+        public void user(TaxiRideProto.UserRequest request, StreamObserver<TaxiRideProto.DriveOptions> responseObserver) {
             TaxiRideProto.City source = request.getLocation();
             LocalDate local_date = protoUtils.getDateFromProto(request.getDate());
             ArrayList<City> path = new ArrayList<>();
@@ -114,12 +114,24 @@ public class city_server {
             // TODO : remove - debug use only
 
             System.out.println(user);
-            setPathCity(local_date, new City(source), path);
+
+            TaxiRideProto.DriveOptions.Builder res = TaxiRideProto.DriveOptions.newBuilder();
+            ArrayList<Ride> foundRides = setPathCity(local_date, new City(source), path);
+            if (foundRides != null){
+                for (Ride ride : foundRides) {
+                    res.addRideOptions(protoUtils.getProtoFromRide(ride)).build();
+                }
+                responseObserver.onNext(res.build());
+            }else{
+                responseObserver.onNext(null);
+            }
+            responseObserver.onCompleted();
         }
 
-        private void setPathCity(LocalDate local_date, City source, ArrayList<City> path) {
+        private ArrayList<Ride> setPathCity(LocalDate local_date, City source, ArrayList<City> path) {
             ArrayList<Long> chosenRides = new ArrayList<>();
             ArrayList<String> cityNames = new ArrayList<>();
+            ArrayList<Ride> rides = new ArrayList<>();
             // For now: let assume only one city in path: path = [end], and we want src -> end @ date
             City currentCity = source;
             for (City pathCity : path) {
@@ -132,6 +144,7 @@ public class city_server {
                             choseOptionForLeg = true;
                             chosenRides.add(ride.getId());
                             cityNames.add("");
+                            rides.add(ride);
                             break;
                         } catch (Errors.FullRide fullRide) {
                             continue;
@@ -173,11 +186,11 @@ public class city_server {
                             }
                             chosenRides.add(driveId);
                             cityNames.add(response.getServerName());
+                            rides.add(new Ride(response.getRide()));
                             System.out.println("-------------");
                             choseOptionForLeg = true;
                             break;
                         } catch (StatusRuntimeException e) {
-//                            e.printStackTrace();
                             System.out.println("server " + city_name + " took to long to respond");
                         } finally {
                             channel.shutdown();
@@ -209,16 +222,17 @@ public class city_server {
                                         .newBuilder()
                                         .setDriveId(it_driveId)
                                         .setServerName("")
+                                        .setFlag(-1)
                                         .build();
                                 stubFuture.cancelPath(cancelPath);
                                 try {
-                                    channel.awaitTermination(3, TimeUnit.SECONDS);
+                                    channel.awaitTermination(500, TimeUnit.MILLISECONDS);
                                 } catch (InterruptedException e) {
                                     System.out.println("Serever " + it_server_name + " took to long to responde");
                                 }
                             }
                         }
-                        return;
+                        return null;
                     }else{
                         currentCity = pathCity;
 
@@ -226,6 +240,7 @@ public class city_server {
             }
             System.out.println("Managed to find path!");
             System.out.println(cityNames);
+            return rides;
         }
 
         @Override
@@ -244,6 +259,7 @@ public class city_server {
                                 .newBuilder()
                                 .setDriveId(ride_in_repo.getId())
                                 .setServerName(city)
+                                .setRide(protoUtils.getProtoFromRide(ride_in_repo))
                                 .build();
                         responseObserver.onNext(rideResponse);
                         legalRide = true;
@@ -259,6 +275,7 @@ public class city_server {
                 responseObserver.onNext(TaxiRideProto.DriveResponse.newBuilder()
                 .setDriveId(-1)
                 .setServerName("")
+                .setFlag(-1)
                 .build());
             }
             responseObserver.onCompleted();

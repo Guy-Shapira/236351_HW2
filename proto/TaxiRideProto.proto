@@ -49,11 +49,15 @@ message DriveOptions{
 message DriveResponse {
     int64 driveId = 1;
     string server_name = 2;
+    oneof optional_ride{
+        RideRequest ride = 3;
+        int32 flag = 4;
+    }
 }
 
 
 service TaxiService {
-    rpc User (UserRequest) returns (UserRequest) {};
+    rpc User (UserRequest) returns (DriveOptions) {};
     rpc Ride (RideRequest) returns (RideRequest) {};
     rpc Path (DriveRequest) returns (DriveResponse) {};
     rpc CancelPath (DriveResponse) returns (DriveResponse) {};
