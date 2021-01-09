@@ -1,5 +1,6 @@
 package RestService.controllers;
 
+import Utils.Errors;
 import com.google.protobuf.TextFormat;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -33,7 +34,7 @@ public class RideController {
     }
 
     @PostMapping("/rides")
-    void post_ride(@RequestBody Ride new_ride) throws InterruptedException {
+    String post_ride(@RequestBody Ride new_ride) throws InterruptedException {
 
         // TODO: remove, only here to debug stuff
         Ride newRide = repository.save(new_ride);
@@ -56,22 +57,24 @@ public class RideController {
                 .setStartLocation(protoUtils.getProtoFromCity(src_city))
                 .build();
 
-        List<String> city_servers  = zkService.getLiveNodes(src_city.getCity_name());
-        System.out.println(city_servers);
-        if (city_servers.size() == 0){
-            throw new RuntimeException("No server in zookeeper system for city : " + src_city.getCity_name());
-        }
-        String[] city_server_details = city_servers.get(0).split(":");
-        ManagedChannel channel = ManagedChannelBuilder
-                .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
-                .usePlaintext()
-                .build();
-        System.out.println(channel);
+        try {
+            String cityRideLeader = zkService.makeAndReturnLeaderForCity(src_city.getCity_name());
+            String[] city_server_details = cityRideLeader.split(":");
+            ManagedChannel channel = ManagedChannelBuilder
+                    .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
+                    .usePlaintext()
+                    .build();
 
-        // TODO: maybe change to blocking?
-        TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
-        stub.ride(ride);
-        channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+            // TODO: maybe change to blocking?
+            TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
+            stub.ride(ride);
+            channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+            return "Your ride was posted! Have a safe ride";
+
+        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity  leaderError){
+            System.out.println("Could not find server for wanted city " + src_city.getCity_name());
+            return "An error occurred, please try again later!";
+        }
 
         // user grpc to send ride to all servers
     }
