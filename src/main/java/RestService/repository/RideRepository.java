@@ -5,41 +5,57 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import Utils.Errors;
+import Utils.RideRepoInstance;
+import Utils.UserRepoInstance;
 
 
 public class RideRepository {
-    private ArrayList<Ride> rides;
+    private ArrayList<RideRepoInstance> rides;
     private long idIndex = 1;
 
     public RideRepository(){
         rides = new ArrayList<>();
     }
 
-    public List<Ride> findAll(){
+    public List<RideRepoInstance> findAll(){
         return rides;
     }
 
-    public Ride save(Ride newRide){
+    public RideRepoInstance save(Ride newRide){
         if (rides.contains(newRide)){
             // TODO: throw better exception
             throw new RuntimeException("already exists");
         }
-        newRide.setId(idIndex ++);
-        rides.add(newRide);
-        return newRide;
+        RideRepoInstance newRideRepo;
+        if (!(newRide instanceof RideRepoInstance)) {
+            newRideRepo = new RideRepoInstance(newRide);
+        }else {
+            newRideRepo = (RideRepoInstance) newRide;
+        }
+
+        newRideRepo.setId(idIndex ++);
+        rides.add(newRideRepo);
+        return newRideRepo;
     }
 
     public void delete(Ride ride){
         rides.remove(ride);
     }
 
-    public Ride getRide (long rideId) throws Errors.RideNotExists {
-        for (Ride ride : this.rides){
+    public RideRepoInstance getRide (long rideId) throws Errors.RideNotExists {
+        for (RideRepoInstance ride : this.rides){
             if (ride.getId().equals(rideId)){
                 return ride;
             }
         }
         throw new Errors.RideNotExists();
+    }
+
+    public void cleanRepo(){
+        long startTime = System.currentTimeMillis();
+        for (RideRepoInstance ride : this.rides){
+            ride.cleanupReservations(startTime);
+        }
     }
 
 }

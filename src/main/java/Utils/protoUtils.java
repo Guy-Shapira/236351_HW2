@@ -5,7 +5,9 @@ import TaxiRide.Ride;
 import TaxiRide.User;
 import protos.TaxiRideProto;
 
+import java.io.FileDescriptor;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 public class protoUtils {
     public static TaxiRideProto.City.Builder getProtoFromCity(City city){
@@ -30,7 +32,7 @@ public class protoUtils {
         return LocalDate.of(protoDate.getYear(), protoDate.getMonth(), protoDate.getDay());
     }
 
-    public static  TaxiRideProto.RideRequest.Builder getProtoFromRide(Ride ride){
+    public static TaxiRideProto.RideRequest.Builder getProtoFromRide(Ride ride){
         return TaxiRideProto.RideRequest
                 .newBuilder()
                 .setFirstName(ride.getFirst_name())
@@ -42,6 +44,13 @@ public class protoUtils {
                 .setVacancies(ride.getVacancies())
                 .setPd(ride.getPd());
     }
+
+    public static TaxiRideProto.RideRequest.Builder getProtoFromRideWithId(Ride ride){
+        TaxiRideProto.RideRequest.Builder rideRequest = getProtoFromRide(ride);
+        rideRequest.setId(ride.getId());
+        return rideRequest;
+    }
+
 
     public static TaxiRideProto.UserRepoRequest.Builder getProtoFromUser(User user){
 
@@ -77,4 +86,10 @@ public class protoUtils {
                 .setStatus(user.getStatus().ordinal());
     }
 
+    public static TaxiRideProto.RideRepoRequest.Builder getProtoFromRideRepo(RideRepoInstance ride){
+        return TaxiRideProto.RideRepoRequest
+                .newBuilder()
+                .setRide(getProtoFromRideWithId(ride))
+                .putAllHashmap(ride.getTimestamps());
+    }
 }

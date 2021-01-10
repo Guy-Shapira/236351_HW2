@@ -23,11 +23,11 @@ for i in range(1):
   location1['city_name'] = "Eilat"
   location1['city_id'] = 2
   
-  # location2 = {}
-  # location2['x'] = 50
-  # location2['y'] = 50
-  # location2['city_name'] = "London"
-  # location2['city_id'] = 4
+  location2 = {}
+  location2['x'] = 50
+  location2['y'] = 50
+  location2['city_name'] = "London"
+  location2['city_id'] = 4
     
   # location3 = {}
   # location3['x'] = 500000

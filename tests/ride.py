@@ -19,7 +19,7 @@ for i in range(1):
   dst_city = {}
   dst_city['x'] = 10
   dst_city['y'] = 30
-  dst_city['city_name'] = 'Eilat'
+  dst_city['city_name'] = 'Tel-Aviv'
   dst_city['city_id'] = 2
 
   
@@ -34,7 +34,7 @@ for i in range(1):
   ride['first_name'] = names[np.random.choice(len(names))]
   ride['last_name'] = 'F'
   ride['vacancies'] = 200
-  ride['pd'] =  10000
+  ride['pd'] =  1
   
   
   
@@ -52,6 +52,8 @@ for i in range(1):
   response = requests.request("POST", url, headers=headers, data = ride_str)
 
   print(response.text.encode('utf8'))
+  print((time.time() - start_time) / (i + 1))
+
   
   
   

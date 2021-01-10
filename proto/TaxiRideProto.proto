@@ -40,6 +40,8 @@ message DriveRequest{
     City source = 1;
     City dst = 2;
     Date date = 3;
+    int64 user_id = 4;
+    string user_city_name = 5;
 }
 
 message DriveOptions{
@@ -49,9 +51,10 @@ message DriveOptions{
 message DriveResponse {
     int64 driveId = 1;
     string server_name = 2;
+    int64 userId = 3;
     oneof optional_ride{
-        RideRequest ride = 3;
-        int32 flag = 4;
+        RideRequest ride = 4;
+        int32 flag = 5;
     }
 }
 
@@ -59,7 +62,10 @@ message UserRepoRequest{
     UserRequest user = 1;
     int32 status = 2;
 }
-
+message RideRepoRequest{
+    RideRequest ride = 1;
+    map<string, int64> hashmap = 2;
+}
 
 service TaxiService {
     rpc User (UserRequest) returns (DriveOptions) {};
@@ -67,4 +73,6 @@ service TaxiService {
     rpc Path (DriveRequest) returns (DriveResponse) {};
     rpc CancelPath (DriveResponse) returns (DriveResponse) {};
     rpc DuplicateUser (UserRepoRequest) returns (UserRepoRequest) {};
+    rpc DuplicateRide (RideRepoRequest) returns (RideRepoRequest) {};
+    rpc CompleteReservation (DriveResponse) returns (DriveResponse) {};
 }

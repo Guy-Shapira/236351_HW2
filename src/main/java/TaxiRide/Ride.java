@@ -13,9 +13,14 @@ public class Ride {
     private City start_location;
     private City end_location;
     private LocalDate date;
-    private Integer vacancies;
+    protected Integer vacancies;
     private Integer pd;
     private Long id;
+
+
+    public Ride(){
+        super();
+    }
 
     public Ride(String first_name, String last_name, Integer phone_number, City start_location, City end_location,
                 LocalDate date, Integer vacancies, Integer pd) {
@@ -38,6 +43,18 @@ public class Ride {
         this.date = protoUtils.getDateFromProto(driveLeg.getDate());
         this.vacancies = driveLeg.getVacancies();
         this.pd = driveLeg.getPd();
+    }
+
+    public Ride(TaxiRideProto.RideRequest driveLeg, long id) {
+        this.first_name = driveLeg.getFirstName();
+        this.last_name = driveLeg.getLastName();
+        this.phone_number = driveLeg.getPhoneNumber();
+        this.start_location = new City(driveLeg.getStartLocation());
+        this.end_location = new City(driveLeg.getEndLocation());
+        this.date = protoUtils.getDateFromProto(driveLeg.getDate());
+        this.vacancies = driveLeg.getVacancies();
+        this.pd = driveLeg.getPd();
+        this.id = id;
     }
 
 
@@ -113,17 +130,7 @@ public class Ride {
         this.id = id;
     }
 
-    public void upVacancies(){
-        this.vacancies += 1;
-    }
 
-    public void lowerVacancies() throws Errors.FullRide {
-        if (this.vacancies <= 0){
-            throw new Errors.FullRide();
-        }else{
-            this.vacancies -= 1;
-        }
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -169,6 +176,6 @@ public class Ride {
         double bottom_part = Math.sqrt(Math.pow(this.end_location.getX() - this.start_location.getX(), 2) +
                         Math.pow(this.end_location.getY() - this.start_location.getY(), 2));
         double total_dist = Math.abs(lhs - rhs) / bottom_part;
-        return total_dist < this.getPd();
+        return total_dist <= this.getPd();
     }
 }

@@ -13,4 +13,8 @@ public class Errors {
     public static class MoreThenOneLeaderForTheCity extends Exception{
 
     }
+
+    public static class AlreadyReservedTheRide extends Exception{
+
+    }
 }

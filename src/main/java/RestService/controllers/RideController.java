@@ -1,6 +1,7 @@
 package RestService.controllers;
 
 import Utils.Errors;
+import Utils.RideRepoInstance;
 import com.google.protobuf.TextFormat;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -47,7 +48,7 @@ public class RideController {
 
         TaxiRideProto.RideRequest ride = TaxiRideProto.RideRequest
                 .newBuilder()
-                .setId(new_ride.getId())
+                .setId(newRide.getId())
                 .setFirstName(new_ride.getFirst_name())
                 .setLastName(new_ride.getLast_name())
                 .setPd(new_ride.getPd())
@@ -83,7 +84,7 @@ public class RideController {
 
     // TODO: remove, only here to debug stuff
     @GetMapping("/rides")
-    List<Ride> get_all_rides(){
+    List<RideRepoInstance> get_all_rides(){
         return repository.findAll();
     }
 }

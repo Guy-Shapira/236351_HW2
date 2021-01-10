@@ -4,6 +4,7 @@ import RestService.repository.RideRepository;
 import TaxiRide.City;
 import TaxiRide.Ride;
 import Utils.Errors;
+import Utils.RideRepoInstance;
 import Utils.protoUtils;
 import io.grpc.*;
 import io.grpc.stub.StreamObserver;
@@ -16,6 +17,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
@@ -71,34 +75,35 @@ public class CityServerRide {
                     request.getVacancies(),
                     request.getPd());
             System.out.println(ride);
-            rideRepository.save(ride);
-            System.out.println(rideRepository.findAll());
+            rideRepository.cleanRepo();
+            RideRepoInstance newRide = rideRepository.save(ride);
+            sendAllDuplicates(newRide);
+
         }
 
         @Override
         public void path(TaxiRideProto.DriveRequest request, StreamObserver<TaxiRideProto.DriveResponse> responseObserver) {
-
             City source = new City(request.getSource());
             City dst = new City(request.getDst());
             TaxiRideProto.Date date = request.getDate();
             LocalDate ride_date = LocalDate.of(date.getYear(), date.getMonth(), date.getDay());
             boolean legalRide = false;
-            for (Ride ride_in_repo : rideRepository.findAll()) {
+            for (RideRepoInstance ride_in_repo : rideRepository.findAll()) {
                 if (ride_in_repo.in_deviation_distance(source) && ride_in_repo.in_deviation_distance(dst) &&
                         ride_in_repo.getDate().equals(ride_date) && ride_in_repo.getVacancies() > 0) {
                     try {
-                        ride_in_repo.lowerVacancies();
+                        ride_in_repo.lowerVacancies(request.getUserCityName(), request.getUserId());
                         TaxiRideProto.DriveResponse rideResponse = TaxiRideProto.DriveResponse
                                 .newBuilder()
                                 .setDriveId(ride_in_repo.getId())
                                 .setServerName(city)
-                                .setRide(protoUtils.getProtoFromRide(ride_in_repo))
+                                .setRide(protoUtils.getProtoFromRideWithId(ride_in_repo))
                                 .build();
                         responseObserver.onNext(rideResponse);
                         legalRide = true;
+                        sendAllDuplicates(ride_in_repo);
                         break;
-                    } catch (Errors.FullRide fullRide) {
-//                        fullRide.printStackTrace();
+                    } catch (Errors.FullRide | Errors.AlreadyReservedTheRide  errorInReservingRide) {
                         continue;
                     }
                 }
@@ -116,13 +121,73 @@ public class CityServerRide {
 
         @Override
         public void cancelPath(TaxiRideProto.DriveResponse request, StreamObserver<TaxiRideProto.DriveResponse> responseObserver) {
+            System.out.println("Canceled");
             try {
-                rideRepository.getRide(request.getDriveId()).upVacancies();
+                String key = request.getServerName() + ":" + request.getUserId();
+                rideRepository.getRide(request.getDriveId()).upVacancies(key);
+
+                sendAllDuplicates(rideRepository.getRide(request.getDriveId()));
             } catch (Errors.RideNotExists rideNotExists) {
                 rideNotExists.printStackTrace();
                 System.out.println("Major Error! Tried to up vacancies in ride with id + " + request.getDriveId() +
                         " but drive does not exists in city " + city +" !\n");
             }
+        }
+
+        @Override
+        public void completeReservation(TaxiRideProto.DriveResponse request, StreamObserver<TaxiRideProto.DriveResponse> responseObserver) {
+            System.out.println("Ack");
+            try {
+                String key = request.getServerName() + ":" + request.getUserId();
+                rideRepository.getRide(request.getDriveId()).deleteTimeStamp(key);
+
+                // update dups
+            } catch (Errors.RideNotExists rideNotExists) {
+                rideNotExists.printStackTrace();
+                System.out.println("Major Error! Tried to up remove timestamp in ride with id + " + request.getDriveId() +
+                        " but drive does not exists in city " + city +" !\n");
+            }
+        }
+
+        public void sendAllDuplicates (RideRepoInstance ride){
+            TaxiRideProto.RideRepoRequest rideRepoRequest = protoUtils.getProtoFromRideRepo(ride).build();
+
+            List<String> duplicates = zkService.getLiveNodes(city, RIDE);
+            duplicates.remove(ip_host);
+
+            for (String duplicate : duplicates) {
+                String[] city_server_details = duplicate.split(":");
+                ManagedChannel channel = ManagedChannelBuilder
+                        .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
+                        .usePlaintext()
+                        .build();
+                TaxiServiceGrpc.TaxiServiceFutureStub sendUser = TaxiServiceGrpc.newFutureStub(channel);
+                sendUser.duplicateRide(rideRepoRequest);
+                try {
+                    channel.awaitTermination(200, TimeUnit.MILLISECONDS);
+                } catch (InterruptedException e) {
+                    // maybe see if duplicate crached or something
+                    e.printStackTrace();
+                }
+            }
+        }
+        // dup function!
+        @Override
+        public void duplicateRide(TaxiRideProto.RideRepoRequest request, StreamObserver<TaxiRideProto.RideRepoRequest> responseObserver) {
+            Ride ride = new Ride(request.getRide(), request.getRide().getId());
+            Map<String, Long> rideMap = request.getHashmapMap();
+            System.out.println("RIDE: " + request.getRide() + "\n\n\n\n");
+            try {
+                rideRepository.getRide(ride.getId()).setTimestamps(rideMap);
+            } catch (Errors.RideNotExists rideNotExists) {
+                RideRepoInstance savedRide = rideRepository.save(ride);
+                try {
+                    rideRepository.getRide(savedRide.getId()).setTimestamps(rideMap);
+                } catch (Errors.RideNotExists notExists) {
+                    notExists.printStackTrace();
+                }
+            }
+
         }
     }
 
