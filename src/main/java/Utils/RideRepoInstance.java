@@ -22,9 +22,8 @@ public class RideRepoInstance extends Ride {
         super(newRide.getFirst_name(), newRide.getLast_name(), newRide.getPhone_number(), newRide.getStart_location(),
                 newRide.getEnd_location(), newRide.getDate(), newRide.getVacancies(), newRide.getPd());
         this.timestamps = new HashMap<>();
-
-
     }
+
 
     public Map<String, Long> getTimestamps() {
         return timestamps;

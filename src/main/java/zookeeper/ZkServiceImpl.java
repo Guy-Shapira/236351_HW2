@@ -68,7 +68,7 @@ public class ZkServiceImpl implements ZkServiceAPI {
             }
         }
         if(city.equals("")) {
-            System.out.println(this.getAllCities());
+//            System.out.println(this.getAllCities());
             return zkClient.getChildren(MEMBER);
         }
         else {
@@ -138,7 +138,7 @@ public class ZkServiceImpl implements ZkServiceAPI {
             if (replication_servers.size() == 0){
                 throw new Errors.NoServerForCity();
             }else{
-                String new_leader_details = replication_servers.get(0);
+                String new_leader_details = replication_servers.get(replication_servers.size() - 1);
                 String leaderNode = LEADER + "/" + city + "/" + function + "/" + new_leader_details;
                 zkClient.create(leaderNode, new_leader_details, CreateMode.PERSISTENT);
                 return new_leader_details;

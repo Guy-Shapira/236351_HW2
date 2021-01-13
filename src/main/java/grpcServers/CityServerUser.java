@@ -89,7 +89,7 @@ public class CityServerUser {
             TaxiRideProto.EmptyMessage emptyMessage = TaxiRideProto.EmptyMessage.newBuilder().build();
             TaxiServiceGrpc.TaxiServiceBlockingStub stub = TaxiServiceGrpc.newBlockingStub(channel);
             TaxiRideProto.UserSnapshot response = stub.getUserSnapshot(emptyMessage);
-            UserRepository newRepo = protoUtils.getUserInstanceFromProto(response);
+            UserRepository newRepo = protoUtils.getUserRepoFromProto(response);
             userRepository.setIdIndex(newRepo.getIdIndex());
             userRepository.setUsers(newRepo.getUsers());
             System.out.println(userRepository.getUsers());

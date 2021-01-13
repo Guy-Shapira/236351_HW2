@@ -1,6 +1,7 @@
 package grpcServers;
 
 import RestService.repository.RideRepository;
+import RestService.repository.UserRepository;
 import TaxiRide.City;
 import TaxiRide.Ride;
 import Utils.Errors;
@@ -57,6 +58,43 @@ public class CityServerRide {
         System.out.println("Znode added to zk sever");
         zkService.registerChildrenChangeWatcher(zkService.MEMBER + "/" + city, new Member());
         System.out.println("added watcher / listener");
+
+        this.getSnapShot();
+    }
+
+
+    public void getSnapShot(){
+        // if leader do nothing, else ask leader for snapshot and store to repo
+        String[] currentLeader = null;
+        try {
+            currentLeader = zkService.makeAndReturnLeaderForCity(city, RIDE).split(":");
+        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError) {
+            leaderError.printStackTrace();
+            System.out.println("Could not find a leader");
+            throw new RuntimeException("No leader, cant operate");
+        }
+        String[] server_details = ip_host.split(":");
+        if (currentLeader[0].equals(server_details[0]) && currentLeader[1].equals(server_details[1])){
+            // is leader, nothing to update
+            System.out.println("Is leader, no update needed");
+            return;
+        }else {
+            System.out.println("Is not leader, update needed");
+            ManagedChannel channel = ManagedChannelBuilder
+                    .forAddress(currentLeader[0], Integer.parseInt(currentLeader[1]))
+                    .usePlaintext()
+                    .build();
+
+            TaxiRideProto.EmptyMessage emptyMessage = TaxiRideProto.EmptyMessage.newBuilder().build();
+            TaxiServiceGrpc.TaxiServiceBlockingStub stub = TaxiServiceGrpc.newBlockingStub(channel);
+            TaxiRideProto.RideSnapshot response = stub.getRideSnapshot(emptyMessage);
+            RideRepository newRepo = protoUtils.getRideRepoFromProto(response);
+            rideRepository.setIdIndex(newRepo.getIdIndex());
+            rideRepository.setRides(newRepo.getRides());
+            System.out.println(rideRepository.getRides());
+        }
+
+
     }
 
     class TaxiImpl extends TaxiServiceGrpc.TaxiServiceImplBase {
@@ -187,7 +225,12 @@ public class CityServerRide {
                     notExists.printStackTrace();
                 }
             }
+        }
 
+        @Override
+        public void getRideSnapshot(TaxiRideProto.EmptyMessage request, StreamObserver<TaxiRideProto.RideSnapshot> responseObserver) {
+            responseObserver.onNext(protoUtils.getProtoFromRidesSnapshot(rideRepository).build());
+            responseObserver.onCompleted();
         }
     }
 

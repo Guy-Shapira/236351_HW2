@@ -1,5 +1,6 @@
 package Utils;
 
+import RestService.repository.RideRepository;
 import RestService.repository.UserRepository;
 import TaxiRide.City;
 import TaxiRide.Ride;
@@ -8,6 +9,7 @@ import protos.TaxiRideProto;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class protoUtils {
     public static TaxiRideProto.City.Builder getProtoFromCity(City city){
@@ -111,7 +113,7 @@ public class protoUtils {
         return newUserRepoInstance;
     }
 
-    public static UserRepository getUserInstanceFromProto(TaxiRideProto.UserSnapshot snapshot){
+    public static UserRepository getUserRepoFromProto(TaxiRideProto.UserSnapshot snapshot){
         UserRepository userRepo = new UserRepository();
         for (TaxiRideProto.UserRepoRequest userRepoRequest : snapshot.getUserSnapshotList()){
             UserRepoInstance currUser = getUserInstanceFromProto(userRepoRequest);
@@ -129,4 +131,35 @@ public class protoUtils {
         }
         return userSnapshotBuilder;
     }
+
+
+    public static RideRepoInstance getRideInstanceFromProto(TaxiRideProto.RideRepoRequest rideRepoRequest){
+        Ride ride = new Ride(rideRepoRequest.getRide());
+        Map<String, Long> hasMap = rideRepoRequest.getHashmapMap();
+        RideRepoInstance rideRepoInstance = new RideRepoInstance(ride);
+        rideRepoInstance.setTimestamps(hasMap);
+        return rideRepoInstance;
+    }
+
+    public static RideRepository getRideRepoFromProto(TaxiRideProto.RideSnapshot snapshot){
+        RideRepository rideRepo = new RideRepository();
+        for (TaxiRideProto.RideRepoRequest rideRepoRequest : snapshot.getRideSnapshotList()){
+            RideRepoInstance currRide = getRideInstanceFromProto(rideRepoRequest);
+            rideRepo.save(currRide);
+        }
+        rideRepo.setIdIndex(snapshot.getIndex());
+        return rideRepo;
+    }
+
+
+    public static TaxiRideProto.RideSnapshot.Builder getProtoFromRidesSnapshot(RideRepository userRepo){
+        TaxiRideProto.RideSnapshot.Builder rideSnapshotBuilder = TaxiRideProto.RideSnapshot.newBuilder();
+        rideSnapshotBuilder.setIndex(userRepo.getIdIndex());
+        for (RideRepoInstance ride : userRepo.findAll()){
+            rideSnapshotBuilder.addRideSnapshot(protoUtils.getProtoFromRideRepo(ride)).build();
+        }
+        return rideSnapshotBuilder;
+    }
+
+
 }

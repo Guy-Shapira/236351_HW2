@@ -58,4 +58,19 @@ public class RideRepository {
         }
     }
 
+    public ArrayList<RideRepoInstance> getRides() {
+        return rides;
+    }
+
+    public void setRides(ArrayList<RideRepoInstance> rides) {
+        this.rides = rides;
+    }
+
+    public long getIdIndex() {
+        return idIndex;
+    }
+
+    public void setIdIndex(long idIndex) {
+        this.idIndex = idIndex;
+    }
 }
