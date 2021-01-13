@@ -43,7 +43,7 @@ public class CityServerUser {
         server = serverBuilder.addService(new TaxiImpl())
                 .build();
         this.city = city;
-        this.userRepository = new UserRepository();;
+        this.userRepository = new UserRepository();
         this.ip_host = InetAddress.getLocalHost().getHostAddress() + ":" + port;
 
         zkService = new ZkServiceImpl(host);
@@ -59,6 +59,43 @@ public class CityServerUser {
         System.out.println("Znode added to zk sever");
         zkService.registerChildrenChangeWatcher(zkService.MEMBER + "/" + city, new Member());
         System.out.println("added watcher / listener");
+        this.getSnapShot();
+
+
+    }
+
+    public void getSnapShot(){
+        // if leader do nothing, else ask leader for snapshot and store to repo
+        String[] currentLeader = null;
+        try {
+             currentLeader = zkService.makeAndReturnLeaderForCity(city, USER).split(":");
+        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError) {
+            leaderError.printStackTrace();
+            System.out.println("Could not find a leader");
+            throw new RuntimeException("No leader, cant operate");
+        }
+        String[] server_details = ip_host.split(":");
+        if (currentLeader[0].equals(server_details[0]) && currentLeader[1].equals(server_details[1])){
+            // is leader, nothing to update
+            System.out.println("Is leader, no update needed");
+            return;
+        }else {
+            System.out.println("Is not leader, update needed");
+            ManagedChannel channel = ManagedChannelBuilder
+                    .forAddress(currentLeader[0], Integer.parseInt(currentLeader[1]))
+                    .usePlaintext()
+                    .build();
+
+            TaxiRideProto.EmptyMessage emptyMessage = TaxiRideProto.EmptyMessage.newBuilder().build();
+            TaxiServiceGrpc.TaxiServiceBlockingStub stub = TaxiServiceGrpc.newBlockingStub(channel);
+            TaxiRideProto.UserSnapshot response = stub.getUserSnapshot(emptyMessage);
+            UserRepository newRepo = protoUtils.getUserInstanceFromProto(response);
+            userRepository.setIdIndex(newRepo.getIdIndex());
+            userRepository.setUsers(newRepo.getUsers());
+            System.out.println(userRepository.getUsers());
+        }
+
+
     }
 
     class TaxiImpl extends TaxiServiceGrpc.TaxiServiceImplBase {
@@ -276,20 +313,15 @@ public class CityServerUser {
         @Override
         public void duplicateUser(TaxiRideProto.UserRepoRequest request, StreamObserver<TaxiRideProto.UserRepoRequest> responseObserver) {
             System.out.println(request);
-            TaxiRideProto.UserRequest userRequest = request.getUser();
-            TaxiRideProto.City source = userRequest.getLocation();
-            LocalDate local_date = protoUtils.getDateFromProto(userRequest.getDate());
-            ArrayList<City> path = new ArrayList<>();
-            for (TaxiRideProto.City city : userRequest.getCityPathList()) {
-                path.add(new City(city));
-            }
-            UserRepoInstance newUserRepoInstance = new UserRepoInstance(new City(source),
-                    userRequest.getFirstName(),
-                    userRequest.getLastName(),
-                    local_date,
-                    path,
-                    UserRepoInstance.UserStatus.values()[request.getStatus()]);
+
+            UserRepoInstance newUserRepoInstance = protoUtils.getUserInstanceFromProto(request);
             userRepository.save(newUserRepoInstance);
+        }
+
+        @Override
+        public void getUserSnapshot(TaxiRideProto.EmptyMessage request, StreamObserver<TaxiRideProto.UserSnapshot> responseObserver) {
+            responseObserver.onNext(protoUtils.getProtoFromUserSnapshot(userRepository).build());
+            responseObserver.onCompleted();
         }
     }
 

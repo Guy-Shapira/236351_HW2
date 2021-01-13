@@ -62,10 +62,23 @@ message UserRepoRequest{
     UserRequest user = 1;
     int32 status = 2;
 }
+
 message RideRepoRequest{
     RideRequest ride = 1;
     map<string, int64> hashmap = 2;
 }
+
+message RideSnapshot{
+    repeated RideRepoRequest rideSnapshot = 1;
+    int64 index = 2;
+}
+
+message UserSnapshot{
+    repeated UserRepoRequest userSnapshot = 1;
+    int64 index = 2;
+}
+
+message EmptyMessage{}
 
 service TaxiService {
     rpc User (UserRequest) returns (DriveOptions) {};
@@ -75,4 +88,6 @@ service TaxiService {
     rpc DuplicateUser (UserRepoRequest) returns (UserRepoRequest) {};
     rpc DuplicateRide (RideRepoRequest) returns (RideRepoRequest) {};
     rpc CompleteReservation (DriveResponse) returns (DriveResponse) {};
+    rpc GetRideSnapshot (EmptyMessage) returns (RideSnapshot) {};
+    rpc GetUserSnapshot (EmptyMessage) returns (UserSnapshot) {};
 }

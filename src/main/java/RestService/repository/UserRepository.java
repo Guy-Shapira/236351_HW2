@@ -42,6 +42,22 @@ public class UserRepository {
         users.remove(user);
     }
 
+    public long getIdIndex() {
+        return idIndex;
+    }
+
+    public void setIdIndex(long idIndex) {
+        this.idIndex = idIndex;
+    }
+
+    public ArrayList<UserRepoInstance> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<UserRepoInstance> users) {
+        this.users = users;
+    }
+
     public UserRepoInstance changeStatusById(long Id) {
         for (UserRepoInstance user : this.users) {
             if (user.getId() == Id) {

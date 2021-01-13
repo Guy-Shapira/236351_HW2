@@ -1,13 +1,13 @@
 package Utils;
 
+import RestService.repository.UserRepository;
 import TaxiRide.City;
 import TaxiRide.Ride;
 import TaxiRide.User;
 import protos.TaxiRideProto;
 
-import java.io.FileDescriptor;
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class protoUtils {
     public static TaxiRideProto.City.Builder getProtoFromCity(City city){
@@ -91,5 +91,42 @@ public class protoUtils {
                 .newBuilder()
                 .setRide(getProtoFromRideWithId(ride))
                 .putAllHashmap(ride.getTimestamps());
+    }
+
+    public static UserRepoInstance getUserInstanceFromProto(TaxiRideProto.UserRepoRequest userRepoRequest){
+        TaxiRideProto.UserRequest userRequest = userRepoRequest.getUser();
+        TaxiRideProto.City source = userRequest.getLocation();
+        LocalDate local_date = protoUtils.getDateFromProto(userRequest.getDate());
+        ArrayList<City> path = new ArrayList<>();
+        for (TaxiRideProto.City city : userRequest.getCityPathList()) {
+            path.add(new City(city));
+        }
+        UserRepoInstance newUserRepoInstance = new UserRepoInstance(new City(source),
+                userRequest.getFirstName(),
+                userRequest.getLastName(),
+                local_date,
+                path,
+                UserRepoInstance.UserStatus.values()[userRepoRequest.getStatus()]);
+
+        return newUserRepoInstance;
+    }
+
+    public static UserRepository getUserInstanceFromProto(TaxiRideProto.UserSnapshot snapshot){
+        UserRepository userRepo = new UserRepository();
+        for (TaxiRideProto.UserRepoRequest userRepoRequest : snapshot.getUserSnapshotList()){
+            UserRepoInstance currUser = getUserInstanceFromProto(userRepoRequest);
+            userRepo.save(currUser);
+        }
+        userRepo.setIdIndex(snapshot.getIndex());
+        return userRepo;
+    }
+
+    public static TaxiRideProto.UserSnapshot.Builder getProtoFromUserSnapshot(UserRepository userRepo){
+        TaxiRideProto.UserSnapshot.Builder userSnapshotBuilder = TaxiRideProto.UserSnapshot.newBuilder();
+        userSnapshotBuilder.setIndex(userRepo.getIdIndex());
+        for (UserRepoInstance user : userRepo.findAll()){
+            userSnapshotBuilder.addUserSnapshot(protoUtils.getProtoFromUser(user)).build();
+        }
+        return userSnapshotBuilder;
     }
 }
