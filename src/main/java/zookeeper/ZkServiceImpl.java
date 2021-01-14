@@ -17,7 +17,7 @@ import org.apache.zookeeper.KeeperException;
 public class ZkServiceImpl implements ZkServiceAPI {
     public final String MEMBER = "/member";
     public final String LEADER = "/leader";
-
+    public final String REST = "/rest";
     private ZkClient zkClient;
 
     public ZkServiceImpl(String zkServers) {
@@ -28,6 +28,16 @@ public class ZkServiceImpl implements ZkServiceAPI {
         zkClient.close();
     }
 
+    @Override
+    public void addRestNode(String nodeName, String data){
+        if (!zkClient.exists(REST)){
+            zkClient.create(REST, "zk- rest", CreateMode.PERSISTENT);
+        }
+        if (!zkClient.exists(REST + "/" + nodeName)){
+            zkClient.create(REST + "/" + nodeName, "zk " + nodeName, CreateMode.EPHEMERAL);
+        }
+        return;
+    }
 
     @Override
     public void addToLiveNodes(String nodeName, String data, String city, String function) {
@@ -112,6 +122,9 @@ public class ZkServiceImpl implements ZkServiceAPI {
         }
         if (!zkClient.exists(LEADER + city)){
             zkClient.create(LEADER + city, "all leaders", CreateMode.PERSISTENT);
+        }
+        if (!zkClient.exists(REST)){
+            zkClient.create(REST, "rest zk", CreateMode.PERSISTENT);
         }
         if (!city.equals("")){
             if (!zkClient.exists(MEMBER + city + "/" + function)){

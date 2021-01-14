@@ -19,4 +19,5 @@ public interface ZkServiceAPI {
 
     void registerChildrenChangeWatcher(String path, IZkChildListener iZkChildListener);
 
+    public void addRestNode(String name, String data);
 }
