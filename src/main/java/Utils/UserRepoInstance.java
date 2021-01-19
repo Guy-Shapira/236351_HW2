@@ -21,6 +21,11 @@ public class UserRepoInstance extends User {
         super(location, first_name, last_name, date, cities_in_path);
         this.userStatus = userStatus;
     }
+    public UserRepoInstance(City location, String first_name, String last_name, LocalDate date, ArrayList<City> cities_in_path, UserStatus userStatus, long id) {
+        super(location, first_name, last_name, date, cities_in_path);
+        this.userStatus = userStatus;
+        this.setId(id);
+    }
 
     public UserRepoInstance(User user){
         super(user.getLocation(), user.getFirst_name(), user.getLast_name(), user.getDate(), user.getCities_in_path());

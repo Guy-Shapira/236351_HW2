@@ -52,6 +52,7 @@ public class RideController {
             TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
             stub.ride(ride);
             channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+            channel.shutdown();
             return "Your ride was posted! Have a safe ride";
 
         } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError){
