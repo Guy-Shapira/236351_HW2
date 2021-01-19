@@ -21,9 +21,12 @@ public class UserRepository {
     }
 
     public UserRepoInstance save(User newUser) {
-        if (users.contains(newUser)) {
-            // TODO: throw better exception
-            throw new RuntimeException("already exists");
+        for (UserRepoInstance user : users){
+            if (user.getId().equals(newUser.getId())){
+                users.remove(user);
+                users.add((UserRepoInstance)newUser);
+                return (UserRepoInstance)newUser;
+            }
         }
         UserRepoInstance newUserRepo;
         if (!(newUser instanceof UserRepoInstance)) {

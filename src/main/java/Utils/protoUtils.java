@@ -108,7 +108,8 @@ public class protoUtils {
                 userRequest.getLastName(),
                 local_date,
                 path,
-                UserRepoInstance.UserStatus.values()[userRepoRequest.getStatus()]);
+                UserRepoInstance.UserStatus.values()[userRepoRequest.getStatus()]
+                ,userRequest.getId());
 
         return newUserRepoInstance;
     }

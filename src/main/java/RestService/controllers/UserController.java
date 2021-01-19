@@ -35,8 +35,59 @@ public class UserController {
         this.repository = new UserRepository();
     }
 
+    String sendUser(City user_city, TaxiRideProto.UserRequest user, Integer count){
+        if (count >= 5)
+        {
+            return "An error occurred, please try again later!";
+        }
+        String city_server = "";
+        System.out.println(user);
+        Boolean newLeaderFlag = false;
+        try {
+            if (zkService.checkIfNewLeaderNeeded(user_city.getCity_name(), FUNCTION)){
+                newLeaderFlag = true;
+            }
+            city_server = zkService.makeAndReturnLeaderForCity(user_city.getCity_name(), FUNCTION);
+        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError){
+            System.out.println("Could not find server for wanted city " + user_city.getCity_name());
+            return "An error occurred, please try again later!";
+        }
+        String[] city_server_details = city_server.split(":");
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
+                .usePlaintext()
+                .build();
+
+        if (newLeaderFlag) {
+            TaxiServiceGrpc.TaxiServiceBlockingStub blockingStub = TaxiServiceGrpc.newBlockingStub(channel);
+            blockingStub.setAsLeader(TaxiRideProto.EmptyMessage.newBuilder().build());
+        }
+
+        TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
+        ListenableFuture<TaxiRideProto.DriveOptions> response = stub.user(user);
+        try {
+            List<Ride> pathRides = new ArrayList<>();
+            List<TaxiRideProto.RideRequest> path = response.get().getRideOptionsList();
+            if (path.size() == 0)
+            {
+                System.out.println("Could not find a path!");
+                return "Sorry, we could not find a path for you...";
+            }else {
+                for (TaxiRideProto.RideRequest driveLeg : path) {
+                    pathRides.add(new Ride(driveLeg));
+                }
+                System.out.println(response.get().getRideOptionsList());
+                channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+                return response.get().getRideOptionsList().toString();
+            }
+
+        } catch (ExecutionException | InterruptedException e) {
+            return sendUser(user_city, user , count + 1);
+        }
+    }
+
     @PostMapping("/users")
-    String post_ride(@RequestBody User new_user) {
+    String post_user(@RequestBody User new_user) {
 
         // TODO: remove, only here to debug stuff
         User newUser = repository.save(new_user);
@@ -58,42 +109,7 @@ public class UserController {
 
         TaxiRideProto.UserRequest user = user_builder.build();
         System.out.println(user);
-        String city_server = null;
-        try {
-            city_server = zkService.makeAndReturnLeaderForCity(user_city.getCity_name(), FUNCTION);
-        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError){
-            System.out.println("Could not find server for wanted city " + user_city.getCity_name());
-            return "An error occurred, please try again later!";
-        }
-        String[] city_server_details = city_server.split(":");
-        ManagedChannel channel = ManagedChannelBuilder
-                .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
-                .usePlaintext()
-                .build();
-
-        // TODO: maybe change to blocking?
-        TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
-        ListenableFuture<TaxiRideProto.DriveOptions> response = stub.user(user);
-        try {
-            List<Ride> pathRides = new ArrayList<>();
-            List<TaxiRideProto.RideRequest> path = response.get().getRideOptionsList();
-            if (path.size() == 0)
-            {
-                System.out.println("Could not find a path!");
-                return "Sorry, we could not find a path for you...";
-            }else {
-                for (TaxiRideProto.RideRequest driveLeg : path) {
-                    pathRides.add(new Ride(driveLeg));
-                }
-                System.out.println(response.get().getRideOptionsList());
-                channel.awaitTermination(500, TimeUnit.MILLISECONDS);
-                return response.get().getRideOptionsList().toString();
-            }
-
-        } catch (ExecutionException | InterruptedException e) {
-//            e.printStackTrace();
-            return "An error occurred, please try again later!";
-        }
+        return sendUser(user_city, user, 0);
     }
 
     // TODO: remove, only here to debug stuff

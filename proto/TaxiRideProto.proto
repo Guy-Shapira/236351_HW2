@@ -80,6 +80,11 @@ message UserSnapshot{
 
 message EmptyMessage{}
 
+message cancelMessage{
+    int64 id = 1;
+    string cityName = 2;
+}
+
 service TaxiService {
     rpc User (UserRequest) returns (DriveOptions) {};
     rpc Ride (RideRequest) returns (RideRequest) {};
@@ -90,4 +95,6 @@ service TaxiService {
     rpc CompleteReservation (DriveResponse) returns (DriveResponse) {};
     rpc GetRideSnapshot (EmptyMessage) returns (RideSnapshot) {};
     rpc GetUserSnapshot (EmptyMessage) returns (UserSnapshot) {};
+    rpc SetAsLeader (EmptyMessage) returns (UserRequest) {};
+    rpc LeaderCancels (cancelMessage) returns (cancelMessage) {};
 }

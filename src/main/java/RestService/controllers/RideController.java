@@ -35,8 +35,36 @@ public class RideController {
         this.repository = new RideRepository();
     }
 
+    String send_ride(City src_city, TaxiRideProto.RideRequest ride, Integer count){
+        if (count >= 5){
+            return "An error occurred, please try again later!";
+        }
+        try {
+            String cityRideLeader = zkService.makeAndReturnLeaderForCity(src_city.getCity_name(), FUNCTION);
+            System.out.println("Found " + cityRideLeader + " as leader for function" + FUNCTION);
+            String[] city_server_details = cityRideLeader.split(":");
+            ManagedChannel channel = ManagedChannelBuilder
+                    .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
+                    .usePlaintext()
+                    .build();
+
+            // TODO: maybe change to blocking?
+            TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
+            stub.ride(ride);
+            channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+            channel.shutdown();
+            return "Your ride was posted! Have a safe ride";
+
+        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError){
+            System.out.println("Could not find server for wanted city " + src_city.getCity_name());
+            return "An error occurred, please try again later!";
+        } catch (InterruptedException e) {
+            return send_ride(src_city, ride, count + 1);
+        }
+    }
+
     @PostMapping("/rides")
-    String post_ride(@RequestBody Ride new_ride) throws InterruptedException {
+    String post_ride(@RequestBody Ride new_ride)  {
 
         // TODO: remove, only here to debug stuff
         Ride newRide = repository.save(new_ride);
@@ -58,26 +86,7 @@ public class RideController {
                 .setEndLocation(protoUtils.getProtoFromCity(end_city))
                 .setStartLocation(protoUtils.getProtoFromCity(src_city))
                 .build();
-
-        try {
-            String cityRideLeader = zkService.makeAndReturnLeaderForCity(src_city.getCity_name(), FUNCTION);
-            System.out.println("Found " + cityRideLeader + " as leader for function" + FUNCTION);
-            String[] city_server_details = cityRideLeader.split(":");
-            ManagedChannel channel = ManagedChannelBuilder
-                    .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
-                    .usePlaintext()
-                    .build();
-
-            // TODO: maybe change to blocking?
-            TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
-            stub.ride(ride);
-            channel.awaitTermination(500, TimeUnit.MILLISECONDS);
-            return "Your ride was posted! Have a safe ride";
-
-        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError){
-            System.out.println("Could not find server for wanted city " + src_city.getCity_name());
-            return "An error occurred, please try again later!";
-        }
+        return send_ride(src_city, ride, 0);
 
         // user grpc to send ride to all servers
     }

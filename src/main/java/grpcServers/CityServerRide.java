@@ -1,7 +1,6 @@
 package grpcServers;
 
 import RestService.repository.RideRepository;
-import RestService.repository.UserRepository;
 import TaxiRide.City;
 import TaxiRide.Ride;
 import Utils.Errors;
@@ -11,14 +10,12 @@ import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 import protos.TaxiRideProto;
 import protos.TaxiServiceGrpc;
-import zookeeper.Member;
 import zookeeper.ZkServiceImpl;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -56,8 +53,6 @@ public class CityServerRide {
 
         zkService.addToLiveNodes(this.ip_host, this.ip_host, city, RIDE);
         System.out.println("Znode added to zk sever");
-        zkService.registerChildrenChangeWatcher(zkService.MEMBER + "/" + city, new Member());
-        System.out.println("added watcher / listener");
 
         this.getSnapShot();
     }
@@ -231,6 +226,16 @@ public class CityServerRide {
         public void getRideSnapshot(TaxiRideProto.EmptyMessage request, StreamObserver<TaxiRideProto.RideSnapshot> responseObserver) {
             responseObserver.onNext(protoUtils.getProtoFromRidesSnapshot(rideRepository).build());
             responseObserver.onCompleted();
+        }
+
+        @Override
+        public void leaderCancels(TaxiRideProto.cancelMessage request, StreamObserver<TaxiRideProto.cancelMessage> responseObserver) {
+            long userId = request.getId();
+            String key = request.getCityName() + ":" + userId;
+            for (RideRepoInstance ride : rideRepository.findAll()){
+                ride.upVacancies(key);
+                sendAllDuplicates(ride);
+            }
         }
     }
 
