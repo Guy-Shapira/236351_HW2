@@ -22,8 +22,12 @@ public class RideRepository {
     }
 
     public RideRepoInstance save(Ride newRide){
-        if (rides.contains(newRide)){
-            throw new RuntimeException("already exists");
+        for (RideRepoInstance ride : rides){
+            if (ride.getId().equals(newRide.getId())){
+                rides.remove(ride);
+                rides.add((RideRepoInstance) newRide);
+                return (RideRepoInstance) newRide;
+            }
         }
         RideRepoInstance newRideRepo;
         if (!(newRide instanceof RideRepoInstance)) {

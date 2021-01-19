@@ -31,34 +31,17 @@ public class UserController {
     private final UserRepository repository;
     public UserController()
     {
-        // TOOD: remove - for debug only
         this.repository = new UserRepository();
     }
 
-    @PostMapping("/users")
-    String post_ride(@RequestBody User new_user) {
-
-        User newUser = repository.save(new_user);
-
-        City user_city = new_user.getLocation();
-        TaxiRideProto.UserRequest.Builder user_builder = TaxiRideProto.UserRequest
-                .newBuilder()
-                .setId(newUser.getId())
-                .setFirstName(newUser.getFirst_name())
-                .setLastName(newUser.getLast_name())
-                .setLocation(protoUtils.getProtoFromCity(user_city))
-                .setDate(protoUtils.getProtoFromDate(newUser.getDate()));
-
-
-        for (City city : new_user.getCities_in_path()){
-            user_builder.addCityPath(protoUtils.getProtoFromCity(city))
-                    .build();
+    String sendUser(City user_city, TaxiRideProto.UserRequest user, Integer count){
+        if (count >= 5)
+        {
+            return "An error occurred, please try again later!";
         }
-
-        TaxiRideProto.UserRequest user = user_builder.build();
+        String city_server = "";
         System.out.println(user);
         Boolean newLeaderFlag = false;
-        String city_server = null;
         try {
             if (zkService.checkIfNewLeaderNeeded(user_city.getCity_name(), FUNCTION)){
                 newLeaderFlag = true;
@@ -98,9 +81,33 @@ public class UserController {
             }
 
         } catch (ExecutionException | InterruptedException e) {
-//            e.printStackTrace();
-            return "An error occurred, please try again later!";
+            return sendUser(user_city, user , count + 1);
         }
+    }
+
+    @PostMapping("/users")
+    String post_user(@RequestBody User new_user) {
+
+        User newUser = repository.save(new_user);
+
+        City user_city = new_user.getLocation();
+        TaxiRideProto.UserRequest.Builder user_builder = TaxiRideProto.UserRequest
+                .newBuilder()
+                .setId(newUser.getId())
+                .setFirstName(newUser.getFirst_name())
+                .setLastName(newUser.getLast_name())
+                .setLocation(protoUtils.getProtoFromCity(user_city))
+                .setDate(protoUtils.getProtoFromDate(newUser.getDate()));
+
+
+        for (City city : new_user.getCities_in_path()){
+            user_builder.addCityPath(protoUtils.getProtoFromCity(city))
+                    .build();
+        }
+
+        TaxiRideProto.UserRequest user = user_builder.build();
+        System.out.println(user);
+        return sendUser(user_city, user, 0);
     }
 
     @GetMapping("/users")
