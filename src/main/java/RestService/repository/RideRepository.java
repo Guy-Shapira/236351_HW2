@@ -23,7 +23,6 @@ public class RideRepository {
 
     public RideRepoInstance save(Ride newRide){
         if (rides.contains(newRide)){
-            // TODO: throw better exception
             throw new RuntimeException("already exists");
         }
         RideRepoInstance newRideRepo;

@@ -48,18 +48,18 @@ public class RideRepoInstance extends Ride {
     }
 
     public void upVacancies(String key) {
-        if (!this.timestamps.containsKey(key)) {
+        if (this.timestamps.containsKey(key)) {
             this.deleteTimeStamp(key);
-        } else {
             this.vacancies += 1;
         }
     }
 
-    public void lowerVacancies(String serverName, long driveId) throws Errors.FullRide, Errors.AlreadyReservedTheRide {
+
+    public void lowerVacancies(String serverName, long userId) throws Errors.FullRide, Errors.AlreadyReservedTheRide {
         if (this.vacancies <= 0){
             throw new Errors.FullRide();
         }else{
-            String keyName = serverName + ":" + driveId;
+            String keyName = serverName + ":" + userId;
             if (this.insertTimeStamp(keyName, System.currentTimeMillis())){
                 this.vacancies -= 1;
             }else{

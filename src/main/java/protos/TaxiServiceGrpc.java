@@ -270,6 +270,60 @@ public final class TaxiServiceGrpc {
      return getGetUserSnapshotMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<protos.TaxiRideProto.EmptyMessage,
+      protos.TaxiRideProto.UserRequest> getSetAsLeaderMethod;
+
+  public static io.grpc.MethodDescriptor<protos.TaxiRideProto.EmptyMessage,
+      protos.TaxiRideProto.UserRequest> getSetAsLeaderMethod() {
+    io.grpc.MethodDescriptor<protos.TaxiRideProto.EmptyMessage, protos.TaxiRideProto.UserRequest> getSetAsLeaderMethod;
+    if ((getSetAsLeaderMethod = TaxiServiceGrpc.getSetAsLeaderMethod) == null) {
+      synchronized (TaxiServiceGrpc.class) {
+        if ((getSetAsLeaderMethod = TaxiServiceGrpc.getSetAsLeaderMethod) == null) {
+          TaxiServiceGrpc.getSetAsLeaderMethod = getSetAsLeaderMethod = 
+              io.grpc.MethodDescriptor.<protos.TaxiRideProto.EmptyMessage, protos.TaxiRideProto.UserRequest>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "protos.TaxiService", "SetAsLeader"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  protos.TaxiRideProto.EmptyMessage.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  protos.TaxiRideProto.UserRequest.getDefaultInstance()))
+                  .setSchemaDescriptor(new TaxiServiceMethodDescriptorSupplier("SetAsLeader"))
+                  .build();
+          }
+        }
+     }
+     return getSetAsLeaderMethod;
+  }
+
+  private static volatile io.grpc.MethodDescriptor<protos.TaxiRideProto.cancelMessage,
+      protos.TaxiRideProto.cancelMessage> getLeaderCancelsMethod;
+
+  public static io.grpc.MethodDescriptor<protos.TaxiRideProto.cancelMessage,
+      protos.TaxiRideProto.cancelMessage> getLeaderCancelsMethod() {
+    io.grpc.MethodDescriptor<protos.TaxiRideProto.cancelMessage, protos.TaxiRideProto.cancelMessage> getLeaderCancelsMethod;
+    if ((getLeaderCancelsMethod = TaxiServiceGrpc.getLeaderCancelsMethod) == null) {
+      synchronized (TaxiServiceGrpc.class) {
+        if ((getLeaderCancelsMethod = TaxiServiceGrpc.getLeaderCancelsMethod) == null) {
+          TaxiServiceGrpc.getLeaderCancelsMethod = getLeaderCancelsMethod = 
+              io.grpc.MethodDescriptor.<protos.TaxiRideProto.cancelMessage, protos.TaxiRideProto.cancelMessage>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "protos.TaxiService", "LeaderCancels"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  protos.TaxiRideProto.cancelMessage.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  protos.TaxiRideProto.cancelMessage.getDefaultInstance()))
+                  .setSchemaDescriptor(new TaxiServiceMethodDescriptorSupplier("LeaderCancels"))
+                  .build();
+          }
+        }
+     }
+     return getLeaderCancelsMethod;
+  }
+
   /**
    * Creates a new async stub that supports all call types for the service
    */
@@ -360,6 +414,20 @@ public final class TaxiServiceGrpc {
       asyncUnimplementedUnaryCall(getGetUserSnapshotMethod(), responseObserver);
     }
 
+    /**
+     */
+    public void setAsLeader(protos.TaxiRideProto.EmptyMessage request,
+        io.grpc.stub.StreamObserver<protos.TaxiRideProto.UserRequest> responseObserver) {
+      asyncUnimplementedUnaryCall(getSetAsLeaderMethod(), responseObserver);
+    }
+
+    /**
+     */
+    public void leaderCancels(protos.TaxiRideProto.cancelMessage request,
+        io.grpc.stub.StreamObserver<protos.TaxiRideProto.cancelMessage> responseObserver) {
+      asyncUnimplementedUnaryCall(getLeaderCancelsMethod(), responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -425,6 +493,20 @@ public final class TaxiServiceGrpc {
                 protos.TaxiRideProto.EmptyMessage,
                 protos.TaxiRideProto.UserSnapshot>(
                   this, METHODID_GET_USER_SNAPSHOT)))
+          .addMethod(
+            getSetAsLeaderMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                protos.TaxiRideProto.EmptyMessage,
+                protos.TaxiRideProto.UserRequest>(
+                  this, METHODID_SET_AS_LEADER)))
+          .addMethod(
+            getLeaderCancelsMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                protos.TaxiRideProto.cancelMessage,
+                protos.TaxiRideProto.cancelMessage>(
+                  this, METHODID_LEADER_CANCELS)))
           .build();
     }
   }
@@ -518,6 +600,22 @@ public final class TaxiServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(getGetUserSnapshotMethod(), getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void setAsLeader(protos.TaxiRideProto.EmptyMessage request,
+        io.grpc.stub.StreamObserver<protos.TaxiRideProto.UserRequest> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getSetAsLeaderMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
+    public void leaderCancels(protos.TaxiRideProto.cancelMessage request,
+        io.grpc.stub.StreamObserver<protos.TaxiRideProto.cancelMessage> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getLeaderCancelsMethod(), getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -599,6 +697,20 @@ public final class TaxiServiceGrpc {
     public protos.TaxiRideProto.UserSnapshot getUserSnapshot(protos.TaxiRideProto.EmptyMessage request) {
       return blockingUnaryCall(
           getChannel(), getGetUserSnapshotMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public protos.TaxiRideProto.UserRequest setAsLeader(protos.TaxiRideProto.EmptyMessage request) {
+      return blockingUnaryCall(
+          getChannel(), getSetAsLeaderMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public protos.TaxiRideProto.cancelMessage leaderCancels(protos.TaxiRideProto.cancelMessage request) {
+      return blockingUnaryCall(
+          getChannel(), getLeaderCancelsMethod(), getCallOptions(), request);
     }
   }
 
@@ -691,6 +803,22 @@ public final class TaxiServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(getGetUserSnapshotMethod(), getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<protos.TaxiRideProto.UserRequest> setAsLeader(
+        protos.TaxiRideProto.EmptyMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(getSetAsLeaderMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<protos.TaxiRideProto.cancelMessage> leaderCancels(
+        protos.TaxiRideProto.cancelMessage request) {
+      return futureUnaryCall(
+          getChannel().newCall(getLeaderCancelsMethod(), getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_USER = 0;
@@ -702,6 +830,8 @@ public final class TaxiServiceGrpc {
   private static final int METHODID_COMPLETE_RESERVATION = 6;
   private static final int METHODID_GET_RIDE_SNAPSHOT = 7;
   private static final int METHODID_GET_USER_SNAPSHOT = 8;
+  private static final int METHODID_SET_AS_LEADER = 9;
+  private static final int METHODID_LEADER_CANCELS = 10;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -755,6 +885,14 @@ public final class TaxiServiceGrpc {
         case METHODID_GET_USER_SNAPSHOT:
           serviceImpl.getUserSnapshot((protos.TaxiRideProto.EmptyMessage) request,
               (io.grpc.stub.StreamObserver<protos.TaxiRideProto.UserSnapshot>) responseObserver);
+          break;
+        case METHODID_SET_AS_LEADER:
+          serviceImpl.setAsLeader((protos.TaxiRideProto.EmptyMessage) request,
+              (io.grpc.stub.StreamObserver<protos.TaxiRideProto.UserRequest>) responseObserver);
+          break;
+        case METHODID_LEADER_CANCELS:
+          serviceImpl.leaderCancels((protos.TaxiRideProto.cancelMessage) request,
+              (io.grpc.stub.StreamObserver<protos.TaxiRideProto.cancelMessage>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -826,6 +964,8 @@ public final class TaxiServiceGrpc {
               .addMethod(getCompleteReservationMethod())
               .addMethod(getGetRideSnapshotMethod())
               .addMethod(getGetUserSnapshotMethod())
+              .addMethod(getSetAsLeaderMethod())
+              .addMethod(getLeaderCancelsMethod())
               .build();
         }
       }

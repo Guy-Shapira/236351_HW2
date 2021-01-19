@@ -10806,6 +10806,595 @@ public final class TaxiRideProto {
 
   }
 
+  public interface cancelMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:protos.cancelMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 id = 1;</code>
+     */
+    long getId();
+
+    /**
+     * <code>string cityName = 2;</code>
+     */
+    java.lang.String getCityName();
+    /**
+     * <code>string cityName = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getCityNameBytes();
+  }
+  /**
+   * Protobuf type {@code protos.cancelMessage}
+   */
+  public  static final class cancelMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:protos.cancelMessage)
+      cancelMessageOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use cancelMessage.newBuilder() to construct.
+    private cancelMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private cancelMessage() {
+      id_ = 0L;
+      cityName_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private cancelMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new java.lang.NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownFieldProto3(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+
+              id_ = input.readInt64();
+              break;
+            }
+            case 18: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              cityName_ = s;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return protos.TaxiRideProto.internal_static_protos_cancelMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return protos.TaxiRideProto.internal_static_protos_cancelMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              protos.TaxiRideProto.cancelMessage.class, protos.TaxiRideProto.cancelMessage.Builder.class);
+    }
+
+    public static final int ID_FIELD_NUMBER = 1;
+    private long id_;
+    /**
+     * <code>int64 id = 1;</code>
+     */
+    public long getId() {
+      return id_;
+    }
+
+    public static final int CITYNAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object cityName_;
+    /**
+     * <code>string cityName = 2;</code>
+     */
+    public java.lang.String getCityName() {
+      java.lang.Object ref = cityName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        cityName_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string cityName = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCityNameBytes() {
+      java.lang.Object ref = cityName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        cityName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (id_ != 0L) {
+        output.writeInt64(1, id_);
+      }
+      if (!getCityNameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, cityName_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (id_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, id_);
+      }
+      if (!getCityNameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, cityName_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof protos.TaxiRideProto.cancelMessage)) {
+        return super.equals(obj);
+      }
+      protos.TaxiRideProto.cancelMessage other = (protos.TaxiRideProto.cancelMessage) obj;
+
+      boolean result = true;
+      result = result && (getId()
+          == other.getId());
+      result = result && getCityName()
+          .equals(other.getCityName());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getId());
+      hash = (37 * hash) + CITYNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getCityName().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static protos.TaxiRideProto.cancelMessage parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static protos.TaxiRideProto.cancelMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(protos.TaxiRideProto.cancelMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code protos.cancelMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:protos.cancelMessage)
+        protos.TaxiRideProto.cancelMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return protos.TaxiRideProto.internal_static_protos_cancelMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return protos.TaxiRideProto.internal_static_protos_cancelMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                protos.TaxiRideProto.cancelMessage.class, protos.TaxiRideProto.cancelMessage.Builder.class);
+      }
+
+      // Construct using protos.TaxiRideProto.cancelMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        id_ = 0L;
+
+        cityName_ = "";
+
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return protos.TaxiRideProto.internal_static_protos_cancelMessage_descriptor;
+      }
+
+      public protos.TaxiRideProto.cancelMessage getDefaultInstanceForType() {
+        return protos.TaxiRideProto.cancelMessage.getDefaultInstance();
+      }
+
+      public protos.TaxiRideProto.cancelMessage build() {
+        protos.TaxiRideProto.cancelMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public protos.TaxiRideProto.cancelMessage buildPartial() {
+        protos.TaxiRideProto.cancelMessage result = new protos.TaxiRideProto.cancelMessage(this);
+        result.id_ = id_;
+        result.cityName_ = cityName_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, java.lang.Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          java.lang.Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof protos.TaxiRideProto.cancelMessage) {
+          return mergeFrom((protos.TaxiRideProto.cancelMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(protos.TaxiRideProto.cancelMessage other) {
+        if (other == protos.TaxiRideProto.cancelMessage.getDefaultInstance()) return this;
+        if (other.getId() != 0L) {
+          setId(other.getId());
+        }
+        if (!other.getCityName().isEmpty()) {
+          cityName_ = other.cityName_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        protos.TaxiRideProto.cancelMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (protos.TaxiRideProto.cancelMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private long id_ ;
+      /**
+       * <code>int64 id = 1;</code>
+       */
+      public long getId() {
+        return id_;
+      }
+      /**
+       * <code>int64 id = 1;</code>
+       */
+      public Builder setId(long value) {
+        
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 id = 1;</code>
+       */
+      public Builder clearId() {
+        
+        id_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object cityName_ = "";
+      /**
+       * <code>string cityName = 2;</code>
+       */
+      public java.lang.String getCityName() {
+        java.lang.Object ref = cityName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          cityName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string cityName = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getCityNameBytes() {
+        java.lang.Object ref = cityName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          cityName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string cityName = 2;</code>
+       */
+      public Builder setCityName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        cityName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string cityName = 2;</code>
+       */
+      public Builder clearCityName() {
+        
+        cityName_ = getDefaultInstance().getCityName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string cityName = 2;</code>
+       */
+      public Builder setCityNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        cityName_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFieldsProto3(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:protos.cancelMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:protos.cancelMessage)
+    private static final protos.TaxiRideProto.cancelMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new protos.TaxiRideProto.cancelMessage();
+    }
+
+    public static protos.TaxiRideProto.cancelMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<cancelMessage>
+        PARSER = new com.google.protobuf.AbstractParser<cancelMessage>() {
+      public cancelMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new cancelMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<cancelMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<cancelMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public protos.TaxiRideProto.cancelMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_protos_City_descriptor;
   private static final 
@@ -10871,6 +11460,11 @@ public final class TaxiRideProto {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_protos_EmptyMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_protos_cancelMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_protos_cancelMessage_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -10911,22 +11505,26 @@ public final class TaxiRideProto {
       "deSnapshot\030\001 \003(\0132\027.protos.RideRepoReques" +
       "t\022\r\n\005index\030\002 \001(\003\"L\n\014UserSnapshot\022-\n\014user" +
       "Snapshot\030\001 \003(\0132\027.protos.UserRepoRequest\022" +
-      "\r\n\005index\030\002 \001(\003\"\016\n\014EmptyMessage2\276\004\n\013TaxiS" +
-      "ervice\0223\n\004User\022\023.protos.UserRequest\032\024.pr" +
-      "otos.DriveOptions\"\000\0222\n\004Ride\022\023.protos.Rid" +
-      "eRequest\032\023.protos.RideRequest\"\000\0225\n\004Path\022" +
-      "\024.protos.DriveRequest\032\025.protos.DriveResp" +
-      "onse\"\000\022<\n\nCancelPath\022\025.protos.DriveRespo" +
-      "nse\032\025.protos.DriveResponse\"\000\022C\n\rDuplicat" +
-      "eUser\022\027.protos.UserRepoRequest\032\027.protos." +
-      "UserRepoRequest\"\000\022C\n\rDuplicateRide\022\027.pro" +
-      "tos.RideRepoRequest\032\027.protos.RideRepoReq" +
-      "uest\"\000\022E\n\023CompleteReservation\022\025.protos.D" +
-      "riveResponse\032\025.protos.DriveResponse\"\000\022?\n" +
-      "\017GetRideSnapshot\022\024.protos.EmptyMessage\032\024" +
-      ".protos.RideSnapshot\"\000\022?\n\017GetUserSnapsho" +
-      "t\022\024.protos.EmptyMessage\032\024.protos.UserSna" +
-      "pshot\"\000b\006proto3"
+      "\r\n\005index\030\002 \001(\003\"\016\n\014EmptyMessage\"-\n\rcancel" +
+      "Message\022\n\n\002id\030\001 \001(\003\022\020\n\010cityName\030\002 \001(\t2\273\005" +
+      "\n\013TaxiService\0223\n\004User\022\023.protos.UserReque" +
+      "st\032\024.protos.DriveOptions\"\000\0222\n\004Ride\022\023.pro" +
+      "tos.RideRequest\032\023.protos.RideRequest\"\000\0225" +
+      "\n\004Path\022\024.protos.DriveRequest\032\025.protos.Dr" +
+      "iveResponse\"\000\022<\n\nCancelPath\022\025.protos.Dri" +
+      "veResponse\032\025.protos.DriveResponse\"\000\022C\n\rD" +
+      "uplicateUser\022\027.protos.UserRepoRequest\032\027." +
+      "protos.UserRepoRequest\"\000\022C\n\rDuplicateRid" +
+      "e\022\027.protos.RideRepoRequest\032\027.protos.Ride" +
+      "RepoRequest\"\000\022E\n\023CompleteReservation\022\025.p" +
+      "rotos.DriveResponse\032\025.protos.DriveRespon" +
+      "se\"\000\022?\n\017GetRideSnapshot\022\024.protos.EmptyMe" +
+      "ssage\032\024.protos.RideSnapshot\"\000\022?\n\017GetUser" +
+      "Snapshot\022\024.protos.EmptyMessage\032\024.protos." +
+      "UserSnapshot\"\000\022:\n\013SetAsLeader\022\024.protos.E" +
+      "mptyMessage\032\023.protos.UserRequest\"\000\022?\n\rLe" +
+      "aderCancels\022\025.protos.cancelMessage\032\025.pro" +
+      "tos.cancelMessage\"\000b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -11018,6 +11616,12 @@ public final class TaxiRideProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_protos_EmptyMessage_descriptor,
         new java.lang.String[] { });
+    internal_static_protos_cancelMessage_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_protos_cancelMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_protos_cancelMessage_descriptor,
+        new java.lang.String[] { "Id", "CityName", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

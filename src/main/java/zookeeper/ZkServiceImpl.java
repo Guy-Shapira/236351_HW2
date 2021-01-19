@@ -158,6 +158,14 @@ public class ZkServiceImpl implements ZkServiceAPI {
             }
         }
     }
+    public Boolean checkIfNewLeaderNeeded(String city, String function) throws Errors.MoreThenOneLeaderForTheCity, Errors.NoServerForCity {
+        String leader = this.getLeaderNode(city, function);
+        if (!leader.equals("")){
+            return false;
+        }else {
+            return true;
+        }
+    }
 
     @Override
     public String getZNodeData(String path) {

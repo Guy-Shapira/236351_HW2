@@ -58,8 +58,12 @@ public class UserController {
 
         TaxiRideProto.UserRequest user = user_builder.build();
         System.out.println(user);
+        Boolean newLeaderFlag = false;
         String city_server = null;
         try {
+            if (zkService.checkIfNewLeaderNeeded(user_city.getCity_name(), FUNCTION)){
+                newLeaderFlag = true;
+            }
             city_server = zkService.makeAndReturnLeaderForCity(user_city.getCity_name(), FUNCTION);
         } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError){
             System.out.println("Could not find server for wanted city " + user_city.getCity_name());
@@ -71,7 +75,11 @@ public class UserController {
                 .usePlaintext()
                 .build();
 
-        // TODO: maybe change to blocking?
+        if (newLeaderFlag) {
+            TaxiServiceGrpc.TaxiServiceBlockingStub blockingStub = TaxiServiceGrpc.newBlockingStub(channel);
+            blockingStub.setAsLeader(TaxiRideProto.EmptyMessage.newBuilder().build());
+        }
+
         TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
         ListenableFuture<TaxiRideProto.DriveOptions> response = stub.user(user);
         try {

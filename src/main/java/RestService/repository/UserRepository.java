@@ -22,7 +22,6 @@ public class UserRepository {
 
     public UserRepoInstance save(User newUser) {
         if (users.contains(newUser)) {
-            // TODO: throw better exception
             throw new RuntimeException("already exists");
         }
         UserRepoInstance newUserRepo;

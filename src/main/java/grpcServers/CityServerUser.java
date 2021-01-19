@@ -1,10 +1,7 @@
 package grpcServers;
 
 import TaxiRide.City;
-import Utils.Errors;
-import Utils.FoundRoute;
-import Utils.UserRepoInstance;
-import Utils.protoUtils;
+import Utils.*;
 import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 import org.I0Itec.zkclient.exception.ZkNoNodeException;
@@ -20,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 import TaxiRide.Ride;
 import TaxiRide.User;
 import RestService.repository.*;
-import zookeeper.Member;
 import zookeeper.ZkServiceImpl;
 import java.net.InetAddress;
 
@@ -57,8 +53,7 @@ public class CityServerUser {
 
         zkService.addToLiveNodes(this.ip_host, this.ip_host, city, USER);
         System.out.println("Znode added to zk sever");
-        zkService.registerChildrenChangeWatcher(zkService.MEMBER + "/" + city, new Member());
-        System.out.println("added watcher / listener");
+
         this.getSnapShot();
 
 
@@ -135,9 +130,6 @@ public class CityServerUser {
                     path);
 
             UserRepoInstance newUser = userRepository.save(user);
-            // TODO : remove - debug use only
-
-            System.out.println(user);
 
             TaxiRideProto.UserRepoRequest userRepoRequest = protoUtils.getProtoFromUser(newUser).build();
             sendAllDuplicates(userRepoRequest);
@@ -213,8 +205,6 @@ public class CityServerUser {
                     System.out.println("No cities in system!");
                     return null;
                 }
-                // TODO: debug- remove
-                System.out.println(all_cities);
                 TaxiRideProto.DriveRequest driveRequest = TaxiRideProto.DriveRequest
                         .newBuilder()
                         .setSource(protoUtils.getProtoFromCity(currentCity))
@@ -278,14 +268,14 @@ public class CityServerUser {
         private void cancelPath(long userId, FoundRoute path) {
             System.out.println("Could not manage to book the trip!");
             for (
-                int i = 0; i < path.getDriveIds().size(); i++) {
+                    int i = 0; i < path.getDriveIds().size(); i++) {
                 long it_driveId = path.getDriveIds().get(i);
                 String it_server_name = path.getCityNames().get(i);
                 String[] city_server_details = new String[0];
                 try {
                     city_server_details = zkService.makeAndReturnLeaderForCity(it_server_name, RIDE).split(":");
 
-                }catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError) {
+                } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError) {
                     System.out.println("Could not undo action because " + leaderError);
                 }
                 ManagedChannel channel = ManagedChannelBuilder
@@ -322,6 +312,42 @@ public class CityServerUser {
         public void getUserSnapshot(TaxiRideProto.EmptyMessage request, StreamObserver<TaxiRideProto.UserSnapshot> responseObserver) {
             responseObserver.onNext(protoUtils.getProtoFromUserSnapshot(userRepository).build());
             responseObserver.onCompleted();
+        }
+
+        @Override
+        public void setAsLeader(TaxiRideProto.EmptyMessage request, StreamObserver<TaxiRideProto.UserRequest> responseObserver) {
+            for (UserRepoInstance userRepoInstance : userRepository.getUsers()) {
+                if (userRepoInstance.getStatus() == UserRepoInstance.UserStatus.PENDING) {
+                    for (City city : userRepoInstance.getCities_in_path()) {
+                        String cityName = city.getCity_name();
+                        String[] city_server_details = new String[1];
+                        try {
+                            city_server_details = zkService.makeAndReturnLeaderForCity(cityName, RIDE).split(":");
+                        } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError) {
+                            leaderError.printStackTrace();
+                        }
+                        ManagedChannel channel = ManagedChannelBuilder
+                                .forAddress(city_server_details[0], Integer.parseInt(city_server_details[1]))
+                                .usePlaintext()
+                                .build();
+
+                        TaxiServiceGrpc.TaxiServiceFutureStub stubFuture = TaxiServiceGrpc.newFutureStub(channel);
+                        TaxiRideProto.cancelMessage cancelPath = TaxiRideProto.cancelMessage
+                                .newBuilder()
+                                .setId(userRepoInstance.getId())
+                                .setCityName(cityName)
+                                .build();
+                        stubFuture.leaderCancels(cancelPath);
+                        userRepoInstance.setStatus(UserRepoInstance.UserStatus.COMPLETE);
+                        sendAllDuplicates(protoUtils.getProtoFromUser(userRepoInstance).build());
+                        try {
+                            channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+                        } catch (InterruptedException e) {
+                            System.out.println("Serever " + cityName + " took to long to responde");
+                        }
+                    }
+                }
+            }
         }
     }
 
