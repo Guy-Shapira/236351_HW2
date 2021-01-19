@@ -16,7 +16,7 @@ cities = [
           {'x':10, 'y':20, 'city_name': 'Haifa', 'city_id':1},     #'Haifa'
           {'x':10, 'y':30, 'city_name': 'Eilat', 'city_id':2},     #'Eilat'
           {'x':40, 'y':10, 'city_name': 'Guyland', 'city_id':3},   #Guyland
-          {'x':1000, 'y':50,'city_name': 'Moon', 'city_id':4},    #Moon
+          {'x':1000, 'y':50,'city_name': 'Moon', 'city_id':4},     #Moon
           {'x':0, 'y':60, 'city_name': 'London', 'city_id':5},     #London
           ]
 
@@ -47,16 +47,18 @@ for k in range(10):
         ride = rides[i]
         ride_str = json.dumps(ride)
         print(ride_str)
-
-        servers = zk.get_children('/rest')
-        print(servers)
-        server = np.random.choice(servers)
-        print(server)
-        url = "http://"+str(server)+"/users"
-        response = requests.request("POST", url, headers=headers, data = ride_str)
-
-        print(response.text.encode('utf8'))
-        print((time.time() - start_time) / (i + 1))
+        reRun = True
+        while reRun:
+            servers = zk.get_children('/rest')
+            print(servers)
+            server = np.random.choice(servers)
+            print(server)
+            url = "http://"+str(server)+"/users"
+            response = requests.request("POST", url, headers=headers, data = ride_str)
+            if not response.text.encode('utf8') == "An error occurred, please try again later!":
+                reRun = False
+            print(response.text.encode('utf8'))
+            print((time.time() - start_time) / (i + 1))
 
 
 
