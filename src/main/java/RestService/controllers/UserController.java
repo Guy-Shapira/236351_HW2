@@ -38,7 +38,6 @@ public class UserController {
     @PostMapping("/users")
     String post_ride(@RequestBody User new_user) {
 
-        // TODO: remove, only here to debug stuff
         User newUser = repository.save(new_user);
 
         City user_city = new_user.getLocation();
@@ -104,7 +103,6 @@ public class UserController {
         }
     }
 
-    // TODO: remove, only here to debug stuff
     @GetMapping("/users")
     List<UserRepoInstance> get_all_rides(){
         return repository.findAll();

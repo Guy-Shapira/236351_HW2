@@ -239,9 +239,6 @@ public class CityServerRide {
         }
     }
 
-
-        // TODO: add here all the stuff about duplicate handle and time stamps
-
         public void start() throws IOException {
         try {
             server.start();
