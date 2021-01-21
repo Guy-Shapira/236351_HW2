@@ -8,13 +8,13 @@ The protobuff file that creates all messages and rpc services.
 ## tests:
 Include Pathplanning and Ride posting tests as well as load testing.
 
-##src/java/RestService:
+## src/java/RestService:
 Includes implementation for REST controllers and repostories (repo to store user/ride in memory).
 
-##src/java/TaxiRide:
+## src/java/TaxiRide:
 Basic implementation for User & Ride classes.
 
-##src/java/zookeeper:
+## src/java/zookeeper:
 Includes the zkService implementation (members and leaders).
 
 
