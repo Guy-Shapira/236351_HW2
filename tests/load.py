@@ -53,7 +53,7 @@ for k in range(10):
             print(servers)
             server = np.random.choice(servers)
             print(server)
-            url = "http://"+str(server)+"/users"
+            url = "http://"+str(server)+"/rides"
             response = requests.request("POST", url, headers=headers, data = ride_str)
             if not response.text.encode('utf8') == "An error occurred, please try again later!":
                 reRun = False
