@@ -31,7 +31,6 @@ public class UserController {
     private final UserRepository repository;
     public UserController()
     {
-        // TOOD: remove - for debug only
         this.repository = new UserRepository();
     }
 
@@ -89,7 +88,6 @@ public class UserController {
     @PostMapping("/users")
     String post_user(@RequestBody User new_user) {
 
-        // TODO: remove, only here to debug stuff
         User newUser = repository.save(new_user);
 
         City user_city = new_user.getLocation();
@@ -112,7 +110,6 @@ public class UserController {
         return sendUser(user_city, user, 0);
     }
 
-    // TODO: remove, only here to debug stuff
     @GetMapping("/users")
     List<UserRepoInstance> get_all_rides(){
         return repository.findAll();

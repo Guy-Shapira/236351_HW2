@@ -48,10 +48,10 @@ public class RideController {
                     .usePlaintext()
                     .build();
 
-            // TODO: maybe change to blocking?
             TaxiServiceGrpc.TaxiServiceFutureStub stub = TaxiServiceGrpc.newFutureStub(channel);
             stub.ride(ride);
             channel.awaitTermination(500, TimeUnit.MILLISECONDS);
+            channel.shutdown();
             return "Your ride was posted! Have a safe ride";
 
         } catch (Errors.MoreThenOneLeaderForTheCity | Errors.NoServerForCity leaderError){
@@ -65,7 +65,6 @@ public class RideController {
     @PostMapping("/rides")
     String post_ride(@RequestBody Ride new_ride)  {
 
-        // TODO: remove, only here to debug stuff
         Ride newRide = repository.save(new_ride);
 
 
@@ -90,11 +89,8 @@ public class RideController {
         // user grpc to send ride to all servers
     }
 
-    // TODO: remove, only here to debug stuff
     @GetMapping("/rides")
     List<RideRepoInstance> get_all_rides(){
         return repository.findAll();
     }
 }
-
-

@@ -50,8 +50,9 @@ public class RideRepoInstance extends Ride {
     public void upVacancies(String key) {
         if (this.timestamps.containsKey(key)) {
             this.deleteTimeStamp(key);
-            this.vacancies += 1;
         }
+        this.vacancies += 1;
+
     }
 
 
